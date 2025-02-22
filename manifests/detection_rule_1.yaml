@@ -1,0 +1,6 @@
+apiVersion: buildrlabs.io/v1
+kind: MicrosoftSentinelDetectionRule
+metadata:
+  name: detection-rule-1
+spec:
+  name: Detection Rule 1manifests/detection_rule_1.yaml
