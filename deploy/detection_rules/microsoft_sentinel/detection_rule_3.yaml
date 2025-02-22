@@ -2,7 +2,6 @@ apiVersion: buildrlabs.io/v1
 kind: MicrosoftSentinelDetectionRule
 metadata:
   name: example-rule-2
-  namespace: a1b2c3d4
 spec:
   name: Example 2
   enabled: true
