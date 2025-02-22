@@ -53,3 +53,4 @@ There is a built-in delay in Microsoft when deleting and re-creating Detection R
 - [ ] Include a status column on the Detection Rule that describes _why_ it isn't deployed, if that is the case
 - [ ] Make it possible to test Detection Rules prior to deployment
 - [ ] Set up a "staging"-cluster in Kind that can be used to verify changes (different and more easily solvable than automated testing)
+- [ ] Create a strict CRD manifest that can be used by Kubernetes to validate incoming resources that we want to create
