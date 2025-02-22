@@ -142,7 +142,7 @@ class ScheduledAlertRuleProperties(BaseModelWithConfig):
 
 class CreateScheduledAlertRule(BaseModelWithConfig):
     kind: Literal["Scheduled"] = "Scheduled"
-    etag: str
+    etag: str | None = None
     properties: ScheduledAlertRuleProperties
 
 

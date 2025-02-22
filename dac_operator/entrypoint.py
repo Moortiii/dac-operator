@@ -1,5 +1,3 @@
-import uuid
-
 import kopf
 
 from dac_operator import providers
@@ -13,7 +11,6 @@ async def create_detection_rule(spec, **kwargs):
     await microsoft_sentinel_service.create_or_update(
         rule_name=kwargs["name"],
         payload=microsoft_sentinel_models.CreateScheduledAlertRule(
-            etag=uuid.uuid4().hex,
             properties=microsoft_sentinel_models.ScheduledAlertRuleProperties(
                 displayName=spec["name"],
                 enabled=spec.get("enabled", True),
