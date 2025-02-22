@@ -1,9 +1,9 @@
 apiVersion: buildrlabs.io/v1
 kind: MicrosoftSentinelDetectionRule
 metadata:
-  name: example-rule-2
+  name: example-detection-rule-3
 spec:
-  name: Example 2
+  name: Example Rule 3
   enabled: true
   description: This is a different description
   query: "Heartbeat"
