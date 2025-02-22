@@ -1,0 +1,22 @@
+apiVersion: buildrlabs.io/v1
+kind: MicrosoftSentinelDetectionRule
+metadata:
+  name: example-rule-2
+spec:
+  name: Example 2
+  enabled: true
+  description: This is a different description
+  query: "Heartbeat"
+  queryFrequency: PT1H
+  queryPeriod: P2DT1H30M
+  severity: Medium
+  triggerOperator: Equal
+  suppressionEnabled: false
+  entityMappings:
+    - entityType: Host
+      fieldMappings:
+        - identifier: FullName
+          columnName: Computer
+  eventGroupingSettings:
+    aggregationKind: AlertPerResult
+  
