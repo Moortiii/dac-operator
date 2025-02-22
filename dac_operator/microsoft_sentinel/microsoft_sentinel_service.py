@@ -29,9 +29,6 @@ class MicrosoftSentinelService:
         # Generate a random uuid to use as the ID for the Analytic Rule
         analytic_rule_id = self._compute_analytics_rule_id(rule_name=rule_name)
 
-        # Make sure to use a static e-tag for update concurrency
-        payload.etag = analytic_rule_id
-
         await self._repository.create_or_update_scheduled_alert_rule(
             payload=payload, analytic_rule_id=analytic_rule_id
         )
