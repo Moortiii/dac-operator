@@ -1,11 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: a1b2c3d4-microsoft-sentinel-configuration
-spec:
-  data:
-    azure_tenant_id: f7dde201-8b88-49f2-8add-9bee184aaa06
-    azure_subscription_id: cc13ec1c-b489-4033-ad14-b2a78cac3e5f
-    azure_workspace_name: dac-thesis
-    azure_workspace_id: dac-thesis
-    azure_resource_group_id: thesis
+  name: microsoft-sentinel-configuration
+data:
+  azure_tenant_id: f7dde201-8b88-49f2-8add-9bee184aaa06
+  azure_subscription_id: cc13ec1c-b489-4033-ad14-b2a78cac3e5f
+  azure_workspace_name: dac-thesis
+  azure_workspace_id: dac-thesis
+  azure_resource_group_id: thesis
