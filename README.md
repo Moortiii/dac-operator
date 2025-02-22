@@ -36,5 +36,5 @@ By using a deploy key, we can avoid bootstrapping Flux with a Github PAT, which 
         --branch=main \
         --private-key-file=./flux_bootstrap_key \
         --password=$FLUX_PRIVATE_KEY_PASSPRHASE \
-        --path=clusters/main
+        --path=clusters/production
     ```
