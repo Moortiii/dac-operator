@@ -8,11 +8,14 @@ spec:
   enabled: true
   description: This is the Detection Rule description
   query: >
-    Resources
-      | where type == 'microsoft.keyvault/vaults'
-      | extend publicAccess = properties.publicNetworkAccess
-      | where publicAccess == 'Enabled'
-      | project name, location, resourceGroup, subscriptionId
+    let Threshold = 25;
+    let TimeFrame = 1h;
+    AzureActivity
+    | where OperationNameValue =~ "MICROSOFT.COMPUTE/VIRTUALMACHINES/START/ACTION"
+    | where ActivityStatusValue == "Success"
+    | extend ResourceName = tostring(parse_json(Properties).resource)
+    | summarize Total = dcount(ResourceName), ResourceNames = make_set(ResourceName) by bin(TimeGenerated, TimeFrame), SubscriptionId, ResourceId
+    | where Total >= Threshold
   queryFrequency: PT1H
   queryPeriod: P2DT1H30M
   severity: High
