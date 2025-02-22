@@ -29,6 +29,9 @@ class MicrosoftSentinelService:
         # Generate a random uuid to use as the ID for the Analytic Rule
         analytic_rule_id = self._compute_analytics_rule_id(rule_name=rule_name)
 
+        # Make sure to use a static e-tag for update concurrency
+        payload.etag = analytic_rule_id
+
         await self._repository.create_or_update_scheduled_alert_rule(
             payload=payload, analytic_rule_id=analytic_rule_id
         )
@@ -37,21 +40,6 @@ class MicrosoftSentinelService:
         analytic_rule_id = self._compute_analytics_rule_id(rule_name=rule_name)
         await self._repository.remove_scheduled_alert_rule(
             analytic_rule_id=analytic_rule_id
-        )
-
-    async def update(
-        self,
-        payload: microsoft_sentinel_models.CreateScheduledAlertRule,
-        analytic_rule_id: str,
-    ):
-        """
-        Update a Detection Rule upstream
-
-        Args:
-            payload(CreateScheduledAlertRule): A valid ScheduledAlertRule object
-        """
-        await self._repository.create_or_update_scheduled_alert_rule(
-            payload=payload, analytic_rule_id=analytic_rule_id
         )
 
     async def is_deployed(self, analytic_rule_id: str) -> bool:
