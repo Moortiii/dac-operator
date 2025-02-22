@@ -38,3 +38,9 @@ By using a deploy key, we can avoid bootstrapping Flux with a Github PAT, which 
         --password=$FLUX_PRIVATE_KEY_PASSPRHASE \
         --path=clusters/production
     ```
+
+#### Known errors:
+
+'Example 2' was deleted too recently, retrying later.
+
+There is a built-in delay in Microsoft when deleting and re-creating Detection Rules. The exact duration of the delay is not known, but is suspected to be somewhere between 30m and 1h30m.
