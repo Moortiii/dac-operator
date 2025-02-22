@@ -7,7 +7,7 @@ spec:
   name: Example 1
   enabled: true
   description: This is the Detection Rule description
-  query: >
+  query: |
     let Threshold = 25;
     let TimeFrame = 1h;
     AzureActivity
