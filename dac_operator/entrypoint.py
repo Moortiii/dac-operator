@@ -6,7 +6,7 @@ from dac_operator.microsoft_sentinel import microsoft_sentinel_models
 microsoft_sentinel_service = providers.get_microsoft_sentinel_service()
 
 
-@kopf.timer("microsoftsentineldetectionrules", interval=300.0)  # type: ignore
+@kopf.timer("microsoftsentineldetectionrules", interval=30.0)  # type: ignore
 async def create_detection_rule(spec, **kwargs):
     await microsoft_sentinel_service.create_or_update(
         rule_name=kwargs["name"],

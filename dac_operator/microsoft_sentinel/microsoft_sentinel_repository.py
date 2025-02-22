@@ -95,13 +95,15 @@ class MicrosoftSentinelRepository:
             )
             response.raise_for_status()
         except httpx.HTTPStatusError as err:
-            if (
-                err.response.status_code == 409
-                and "was recently deleted" in err.response.text
-            ):
-                self._logger.info(
-                    f"'{payload.properties.displayName}' was deleted too recently, retrying later."  # noqa: E501
-                )
+            if err.response.status_code == 409:
+                if "was recently deleted" in err.response.text:
+                    self._logger.info(
+                        f"'{payload.properties.displayName}' was deleted too recently, retrying later."  # noqa: E501
+                    )
+                elif "Etag does not match" in err.response.text:
+                    self._logger.info(
+                        f"'{payload.properties.displayName}' e-tag error, retrying later."  # noqa: E501
+                    )
             else:
                 self._logger.exception(
                     f"An error occured while creating Analytics rule: {err.response.text}"  # noqa: E501
@@ -122,5 +124,3 @@ class MicrosoftSentinelRepository:
                 f"An error occured while creating Analytics rule: {err.response.text}"  # noqa: E501
             )
             raise err from None
-
-        return response.json()
