@@ -1,13 +1,41 @@
 import kopf
+import kubernetes.client.exceptions
+from kubernetes import client
+from loguru import logger
 
 from dac_operator import providers
+from dac_operator.ext import kubernetes_models
 from dac_operator.microsoft_sentinel import microsoft_sentinel_models
-
-microsoft_sentinel_service = providers.get_microsoft_sentinel_service()
 
 
 @kopf.timer("microsoftsentineldetectionrules", interval=30.0)  # type: ignore
 async def create_detection_rule(spec, **kwargs):
+    configmap_name = "microsoft-sentinel-configuration"
+
+    v1 = client.CoreV1Api()
+
+    try:
+        configmap = kubernetes_models.ConfigMap.model_validate(
+            v1.read_namespaced_config_map(
+                name=configmap_name, namespace=kwargs["namespace"]
+            ),
+            from_attributes=True,
+        )
+    except kubernetes.client.exceptions.ApiException:
+        logger.error(f"Config map '{configmap_name}' does not exist.")
+        return
+
+    if configmap.data is None:
+        logger.error(f"No data in '{configmap_name}'.")
+        return
+
+    microsoft_sentinel_service = providers.get_microsoft_sentinel_service(
+        tenant_id=configmap.data["azure_tenant_id"],
+        workspace_id=configmap.data["azure_workspace_id"],
+        subscription_id=configmap.data["azure_subscription_id"],
+        resource_group_id=configmap.data["azure_resource_group_id"],
+    )
+
     await microsoft_sentinel_service.create_or_update(
         rule_name=kwargs["name"],
         payload=microsoft_sentinel_models.CreateScheduledAlertRule(
