@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: microsoft-sentinel-configuration
+data:
+  azure_tenant_id: f7dde201-8b88-49f2-8add-9bee184aaa06
+  azure_subscription_id: cc13ec1c-b489-4033-ad14-b2a78cac3e5f
+  azure_workspace_name: ce06ce71
+  azure_workspace_id: ce06ce71
+  azure_resource_group_id: ce06ce71
