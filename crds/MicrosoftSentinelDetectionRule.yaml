@@ -16,6 +16,11 @@ spec:
     - name: v1
       served: true
       storage: true
+      additionalPrinterColumns:
+        - name: Deployed
+          type: string
+          jsonPath: .status.create_detection_rule.deployed
+          description: "Checks if the Detection Rule is deployed to Microsoft Sentinel"
       schema:
         openAPIV3Schema:
           type: object

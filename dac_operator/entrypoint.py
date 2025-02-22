@@ -65,6 +65,8 @@ async def create_detection_rule(spec, **kwargs):
         ),
     )
 
+    return {"deployed": True}
+
 
 @kopf.on.delete("microsoftsentineldetectionrules")  # type: ignore
 async def remove_detection_rule(spec, **kwargs):

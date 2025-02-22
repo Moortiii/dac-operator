@@ -14,7 +14,7 @@ class MicrosoftSentinelRepository:
         resource_group_id: str,
         workspace_id: str,
         client_secret: SecretStr,
-        http_client=httpx.AsyncClient(),
+        http_client=httpx.AsyncClient(timeout=30),
         logger=default_loguru_logger,
     ):
         self._client_id = client_id
