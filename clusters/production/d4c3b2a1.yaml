@@ -1,7 +1,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: a1b2c3d4-detection-rules
+  name: d4c3b2a1-detection-rules
   namespace: flux-system
 spec:
   interval: 1h
@@ -10,6 +10,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./deploy/tenants/a1b2c3d4
-  targetNamespace: a1b2c3d4
+  path: ./deploy/tenants/d4c3b2a1
+  targetNamespace: d4c3b2a1
   prune: true
