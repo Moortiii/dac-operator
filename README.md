@@ -47,10 +47,9 @@ There is a built-in delay in Microsoft when deleting and re-creating Detection R
 
 #### TODO:
 
-- [ ] Fetch information about which workspace to use etc. in the kopf-controller from the customer configmap
+- [x] Fetch information about which workspace to use etc. in the kopf-controller from the customer configmap
 - [ ] Include a status column on the Detection Rule that indicates if it is deployed upstream or not
 - [ ] Store the expiry when authenticating to prevent authenticating again for each Detection Rule to deploy
 - [ ] Include a status column on the Detection Rule that describes _why_ it isn't deployed, if that is the case
-- [ ] Support a form of multi-tenancy using config-map, secrets or other alternatives
 - [ ] Make it possible to test Detection Rules prior to deployment
 - [ ] Set up a "staging"-cluster in Kind that can be used to verify changes (different and more easily solvable than automated testing)
