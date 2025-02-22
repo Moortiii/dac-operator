@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 EntityType = Literal[
     "Account",
@@ -61,123 +61,115 @@ TriggerOperator = Literal["Equal", "GreaterThan", "LessThan", "NotEqual"]
 AlertSeverity = Literal["High", "Medium", "Low", "Informational"]
 
 
-class GroupingConfiguration(BaseModel):
+class BaseModelWithConfig(BaseModel):
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
+
+class GroupingConfiguration(BaseModelWithConfig):
     enabled: bool
-    group_by_alert_details: list[AlertDetail] = Field(
-        ..., validation_alias="groupByAlertDetails"
-    )
-    group_by_custom_details: list[str] = Field(
-        ..., validation_alias="groupByCustomDetails"
-    )
-    group_by_entities: list[EntityType] = Field(..., validation_alias="groupByEntities")
-    lookback_duration: str = Field(..., validation_alias="lookbackDuration")
-    matching_method: MatchingMethod = Field(..., validation_alias="matchingMethod")
-    reopen_closed_incident: bool = Field(..., validation_alias="reopenClosedIncident")
+    group_by_alert_details: list[AlertDetail] = Field(..., alias="groupByAlertDetails")
+    group_by_custom_details: list[str] = Field(..., alias="groupByCustomDetails")
+    group_by_entities: list[EntityType] = Field(..., alias="groupByEntities")
+    lookback_duration: str = Field(..., alias="lookbackDuration")
+    matching_method: MatchingMethod = Field(..., alias="matchingMethod")
+    reopen_closed_incident: bool = Field(..., alias="reopenClosedIncident")
 
 
-class IncidentConfiguration(BaseModel):
-    create_incident: bool = Field(..., validation_alias="createIncident")
+class IncidentConfiguration(BaseModelWithConfig):
+    create_incident: bool = Field(..., alias="createIncident")
     grouping_configuration: GroupingConfiguration = Field(
-        ..., validation_alias="groupingConfiguration"
+        ..., alias="groupingConfiguration"
     )
 
 
-class EventGroupingSettings(BaseModel):
-    aggeregation_kind: AggregationKind = Field(..., validation_alias="aggregationKind")
+class EventGroupingSettings(BaseModelWithConfig):
+    aggeregation_kind: AggregationKind = Field(..., alias="aggregationKind")
 
 
-class FieldMapping(BaseModel):
-    column_name: str = Field(..., validation_alias="columnName")
+class FieldMapping(BaseModelWithConfig):
+    column_name: str = Field(..., alias="columnName")
     identifier: str
 
 
-class EntityMapping(BaseModel):
-    entity_type: EntityType = Field(..., validation_alias="entityType")
-    field_mappings: list[FieldMapping] = Field(..., validation_alias="fieldMappings")
+class EntityMapping(BaseModelWithConfig):
+    entity_type: EntityType = Field(..., alias="entityType")
+    field_mappings: list[FieldMapping] = Field(..., alias="fieldMappings")
 
 
-class AlertPropertyMapping(BaseModel):
-    alert_property: AlertProperty = Field(..., validation_alias="alertProperty")
+class AlertPropertyMapping(BaseModelWithConfig):
+    alert_property: AlertProperty = Field(..., alias="alertProperty")
     value: str
 
 
-class AlertDetailsOverride(BaseModel):
-    alert_description_format: str = Field(
-        ..., validation_alias="alertDescriptionFormat"
-    )
-    alert_display_name_format: str = Field(
-        ..., validation_alias="alertDisplayNameFormat"
-    )
+class AlertDetailsOverride(BaseModelWithConfig):
+    alert_description_format: str = Field(..., alias="alertDescriptionFormat")
+    alert_display_name_format: str = Field(..., alias="alertDisplayNameFormat")
     alert_dynamic_properties: list[AlertPropertyMapping] = Field(
-        ..., validation_alias="alertDynamicProperties"
+        ..., alias="alertDynamicProperties"
     )
-    alert_severity_column_name: str = Field(
-        ..., validation_alias="alertSeverityColumnName"
-    )
-    alert_tactics_column_name: str = Field(
-        ..., validation_alias="alertTacticsColumnName"
-    )
+    alert_severity_column_name: str = Field(..., alias="alertSeverityColumnName")
+    alert_tactics_column_name: str = Field(..., alias="alertTacticsColumnName")
 
 
-class ScheduledAlertRuleProperties(BaseModel):
+class ScheduledAlertRuleProperties(BaseModelWithConfig):
     displayName: str
     enabled: bool
     query: str
-    query_frequency: str = Field(..., validation_alias="queryFrequency")
-    query_period: str = Field(..., validation_alias="queryPeriod")
-    suppression_duration: str = Field(..., validation_alias="suppressionDuration")
-    suppression_enabled: bool = Field(..., validation_alias="suppressionEnabled")
-    trigger_operator: TriggerOperator = Field(..., validation_alias="triggerOperator")
-    trigger_threshold: int = Field(..., validation_alias="suppressionEnabled")
+    query_frequency: str = Field("PT1H", alias="queryFrequency")
+    query_period: str = Field("PT1H", alias="queryPeriod")
+    suppression_duration: str = Field(..., alias="suppressionDuration")
+    suppression_enabled: bool = Field(..., alias="suppressionEnabled")
+    trigger_operator: TriggerOperator = Field(..., alias="triggerOperator")
+    trigger_threshold: int = Field(..., alias="triggerThreshold")
     severity: AlertSeverity
-    alert_details_override: AlertDetailsOverride = Field(
-        ..., validation_alias="alertDetailsOverride"
+    alert_details_override: AlertDetailsOverride | None = Field(
+        None, alias="alertDetailsOverride"
     )
-    alert_rule_template_name: str = Field(..., validation_alias="alertRuleTemplateName")
-    custom_details: dict[str, str] = Field(..., validation_alias="customDetails")
+    alert_rule_template_name: str | None = Field(None, alias="alertRuleTemplateName")
+    custom_details: dict[str, str] = Field(..., alias="customDetails")
     description: str
-    entity_mappings: list[EntityMapping] = Field(..., validation_alias="entityMappings")
-    event_grouping_settings: EventGroupingSettings = Field(
-        ..., validation_alias="eventGroupingSettings"
+    entity_mappings: list[EntityMapping] = Field([], alias="entityMappings")
+    event_grouping_settings: EventGroupingSettings | None = Field(
+        None, alias="eventGroupingSettings"
     )
-    incident_configuration: IncidentConfiguration = Field(
-        ..., validation_alias="incidentConfiguration"
+    incident_configuration: IncidentConfiguration | None = Field(
+        None, alias="incidentConfiguration"
     )
-    tactics: list[AttackTactic]
-    techniques: list[str]
-    template_version: str = Field(..., validation_alias="templateVersion")
+    tactics: list[AttackTactic] = []
+    techniques: list[str] = []
+    template_version: str | None = Field(None, alias="templateVersion")
 
 
-class CreateScheduledAlertRule(BaseModel):
+class CreateScheduledAlertRule(BaseModelWithConfig):
     kind: Literal["Scheduled"] = "Scheduled"
     etag: str
     properties: ScheduledAlertRuleProperties
 
 
-class CreateScheduledAlertRuleCRDInput(BaseModel):
+class CreateScheduledAlertRuleCRDInput(BaseModelWithConfig):
     displayName: str
     enabled: bool
     query: str
-    query_frequency: str = Field(..., validation_alias="queryFrequency")
-    query_period: str = Field(..., validation_alias="queryPeriod")
-    suppression_duration: str = Field(..., validation_alias="suppressionDuration")
-    suppression_enabled: bool = Field(..., validation_alias="suppressionEnabled")
-    trigger_operator: TriggerOperator = Field(..., validation_alias="triggerOperator")
-    trigger_threshold: int = Field(..., validation_alias="suppressionEnabled")
+    query_frequency: str = Field(..., alias="queryFrequency")
+    query_period: str = Field(..., alias="queryPeriod")
+    suppression_duration: str = Field(..., alias="suppressionDuration")
+    suppression_enabled: bool = Field(..., alias="suppressionEnabled")
+    trigger_operator: TriggerOperator = Field(..., alias="triggerOperator")
+    trigger_threshold: int = Field(..., alias="suppressionEnabled")
     severity: AlertSeverity
     alert_details_override: AlertDetailsOverride = Field(
-        ..., validation_alias="alertDetailsOverride"
+        ..., alias="alertDetailsOverride"
     )
-    alert_rule_template_name: str = Field(..., validation_alias="alertRuleTemplateName")
-    custom_details: dict[str, str] = Field(..., validation_alias="customDetails")
+    alert_rule_template_name: str = Field(..., alias="alertRuleTemplateName")
+    custom_details: dict[str, str] = Field(..., alias="customDetails")
     description: str
-    entity_mappings: list[EntityMapping] = Field(..., validation_alias="entityMappings")
+    entity_mappings: list[EntityMapping] = Field(..., alias="entityMappings")
     event_grouping_settings: EventGroupingSettings = Field(
-        ..., validation_alias="eventGroupingSettings"
+        ..., alias="eventGroupingSettings"
     )
     incident_configuration: IncidentConfiguration = Field(
-        ..., validation_alias="incidentConfiguration"
+        ..., alias="incidentConfiguration"
     )
     tactics: list[AttackTactic]
     techniques: list[str]
-    template_version: str = Field(..., validation_alias="templateVersion")
+    template_version: str = Field(..., alias="templateVersion")
