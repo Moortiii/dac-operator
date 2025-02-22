@@ -10,6 +10,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./deploy/tenants/a1b2c3d4
+  path: ./deploy/tenants/a1b2c3d4/production
   targetNamespace: a1b2c3d4
   prune: true
