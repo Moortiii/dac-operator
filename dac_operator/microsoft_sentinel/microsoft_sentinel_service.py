@@ -57,6 +57,10 @@ class MicrosoftSentinelService:
         if deployed:
             enabled = rule["properties"]["enabled"]
 
+        rule_type = "Unknown"
+        if deployed:
+            rule_type = rule["kind"]
+
         return microsoft_sentinel_models.AnalyticsRuleStatus(
-            deployed=deployed, enabled=enabled
+            deployed=deployed, enabled=enabled, rule_type=rule_type
         )

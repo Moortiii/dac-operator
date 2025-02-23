@@ -59,11 +59,15 @@ AggregationKind = Literal["AlertPerResult", "SingleAlert"]
 MatchingMethod = Literal["AllEntities", "AnyAlert", "Selected"]
 TriggerOperator = Literal["Equal", "GreaterThan", "LessThan", "NotEqual"]
 AlertSeverity = Literal["High", "Medium", "Low", "Informational"]
+DetectionRuleTypes = Literal[
+    "Unknown", "MicrosoftSecurityIncidentCreation", "Fusion", "Scheduled"
+]
 
 
 class AnalyticsRuleStatus(BaseModel):
     enabled: bool
     deployed: bool
+    rule_type: DetectionRuleTypes
 
 
 class BaseModelWithConfig(BaseModel):
