@@ -7,6 +7,8 @@ spec:
   enabled: true
   description: This is the Detection Rule description
   query: "Heartbeat"
+  queryPrefix: ""
+  querySuffix: ""
   queryFrequency: PT1H
   queryPeriod: P2DT1H30M
   severity: Informational
