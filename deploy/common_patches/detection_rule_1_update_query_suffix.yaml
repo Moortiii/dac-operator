@@ -1,4 +1,4 @@
 - op: replace 
   path: /spec/querySuffix
   value: |
-    | eval "This is the new and improved suffix"
+    | extend DummyColumn = "This is a query suffix example"
