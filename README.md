@@ -45,12 +45,14 @@ By using a deploy key, we can avoid bootstrapping Flux with a Github PAT, which 
 
 There is a built-in delay in Microsoft when deleting and re-creating Detection Rules. The exact duration of the delay is not known, but is suspected to be somewhere between 30m and 1h30m.
 
+This isn't usually a problem in production where Detection Rules are relatively static, and instead are toggled as enabled / disabled.
+
 #### TODO:
 
 - [x] Fetch information about which workspace to use etc. in the kopf-controller from the customer configmap
-- [ ] Include a status column on the Detection Rule that indicates if it is deployed upstream or not
-- [ ] Store the expiry when authenticating to prevent authenticating again for each Detection Rule to deploy
+- [x] Include a status column on the Detection Rule that indicates if it is deployed upstream or not
 - [ ] Include a status column on the Detection Rule that describes _why_ it isn't deployed, if that is the case
+- [ ] Store the expiry when authenticating to prevent authenticating again for each Detection Rule to deploy
 - [ ] Make it possible to test Detection Rules prior to deployment
 - [ ] Set up a "staging"-cluster in Kind that can be used to verify changes (different and more easily solvable than automated testing)
-- [ ] Create a strict CRD manifest that can be used by Kubernetes to validate incoming resources that we want to create
+- [ ] Create a strict CRD manifest that can be used by Kubernetes to validate incoming resources that we want to create (use Kubebuilder or kube-rs and structure as monorepo?)
