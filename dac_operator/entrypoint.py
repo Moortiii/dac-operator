@@ -1,38 +1,50 @@
 import kopf
-import kubernetes.client.exceptions
 from kubernetes import client
 from loguru import logger
+from pydantic import BaseModel, model_serializer
 
 from dac_operator import providers
 from dac_operator.crd import crd_models
-from dac_operator.ext import kubernetes_models
+from dac_operator.ext import kubernetes_exceptions
 from dac_operator.microsoft_sentinel import microsoft_sentinel_models
 from dac_operator.microsoft_sentinel.microsoft_sentinel_macro_service import (
     MicrosoftSentinelMacroService,
 )
 
 
+class CreateDetectionRuleStatus(BaseModel):
+    deployed: bool = False
+    enabled: bool = False
+    rule_type: str = "Unknown"
+    message: str = ""
+
+    @model_serializer
+    def serialize(self):
+        return {
+            "deployed": "Deployed" if self.deployed else "Not deployed",
+            "enabled": "Enabled" if self.enabled else "Disabled",
+            "rule_type": self.rule_type,
+            "message": self.message,
+        }
+
+
 @kopf.timer("microsoftsentineldetectionrules", interval=30.0)  # type: ignore
 async def create_detection_rule(spec, **kwargs):
-    configmap_name = "microsoft-sentinel-configuration"
+    status = CreateDetectionRuleStatus()
 
-    v1_api = client.CoreV1Api()
-    custom_objects_api = client.CustomObjectsApi()
+    namespace = kwargs["namespace"]
+
+    kubernetes_client = providers.get_kubernetes_client(
+        core_api=client.CoreV1Api(), custom_objects_api=client.CustomObjectsApi()
+    )
 
     try:
-        configmap = kubernetes_models.ConfigMap.model_validate(
-            v1_api.read_namespaced_config_map(
-                name=configmap_name, namespace=kwargs["namespace"]
-            ),
-            from_attributes=True,
+        configmap = kubernetes_client.get_config_map(
+            name="microsoft-sentinel-configuration", namespace=namespace
         )
-    except kubernetes.client.exceptions.ApiException:
-        logger.error(f"Config map '{configmap_name}' does not exist.")
-        return
-
-    if configmap.data is None:
-        logger.error(f"No data in '{configmap_name}'.")
-        return
+    except kubernetes_exceptions.ResourceNotFoundException:
+        status.message = "Unable to configure provider, see controller logs."
+        return status.model_dump()
 
     microsoft_sentinel_service = providers.get_microsoft_sentinel_service(
         tenant_id=configmap.data["azure_tenant_id"],
@@ -40,29 +52,30 @@ async def create_detection_rule(spec, **kwargs):
         subscription_id=configmap.data["azure_subscription_id"],
         resource_group_id=configmap.data["azure_resource_group_id"],
     )
+
     query = spec["query"]
-
     macro_service = MicrosoftSentinelMacroService()
-
     for macro_name in macro_service.get_used_macros(query=query):
         try:
-            macro = crd_models.MicrosoftSentinelMacro.model_validate(
-                custom_objects_api.get_namespaced_custom_object(
-                    group="buildrlabs.io",
-                    version="v1",
-                    namespace=kwargs["namespace"],
-                    plural="microsoftsentinelmacros",
-                    name=macro_name,
-                )
+            macro = kubernetes_client.get_namespaced_custom_object(
+                group="buildrlabs.io",
+                version="v1",
+                namespace=namespace,
+                plural="microsoftsentinelmacros",
+                name=macro_name,
+                return_type=crd_models.MicrosoftSentinelMacro,
             )
             query = macro_service.replace_macro(
                 text=query, macro_name=macro_name, replacement=macro.spec.content
             )
-        except kubernetes.client.exceptions.ApiException:
-            logger.error(
+        except kubernetes_exceptions.ResourceNotFoundException:
+            error_message = (
                 f"The macro '{macro_name}' is referenced in '{kwargs['name']}', "
                 "but is not deployed in the Tenant namespace."
             )
+            logger.error(error_message)
+            status.message = error_message
+            return status.model_dump()
 
     # TODO: Work out serialization / validation alias to prevent incorrect type errors
     await microsoft_sentinel_service.create_or_update(
@@ -95,39 +108,29 @@ async def create_detection_rule(spec, **kwargs):
         ),
     )
 
-    status = await microsoft_sentinel_service.status(
+    analytics_rule_status = await microsoft_sentinel_service.status(
         analytic_rule_id=microsoft_sentinel_service._compute_analytics_rule_id(
             rule_name=kwargs["name"]
         )
     )
+    status.rule_type = analytics_rule_status.rule_type
+    status.deployed = analytics_rule_status.deployed
+    status.enabled = analytics_rule_status.enabled
 
-    return {
-        "deployed": "Deployed" if status.deployed else "Not deployed",
-        "enabled": "Enabled" if status.enabled else "Disabled",
-        "rule_type": status.rule_type,
-        "message": "This field will contain additional information",
-    }
+    return status.model_dump()
 
 
 @kopf.on.delete("microsoftsentineldetectionrules")  # type: ignore
 async def remove_detection_rule(spec, **kwargs):
-    configmap_name = "microsoft-sentinel-configuration"
-
-    v1_api = client.CoreV1Api()
+    kubernetes_client = providers.get_kubernetes_client(
+        core_api=client.CoreV1Api(), custom_objects_api=client.CustomObjectsApi()
+    )
 
     try:
-        configmap = kubernetes_models.ConfigMap.model_validate(
-            v1_api.read_namespaced_config_map(
-                name=configmap_name, namespace=kwargs["namespace"]
-            ),
-            from_attributes=True,
+        configmap = kubernetes_client.get_config_map(
+            name="microsoft-sentinel-configuration", namespace=kwargs["namespace"]
         )
-    except kubernetes.client.exceptions.ApiException:
-        logger.error(f"Config map '{configmap_name}' does not exist.")
-        return
-
-    if configmap.data is None:
-        logger.error(f"No data in '{configmap_name}'.")
+    except kubernetes_exceptions.ResourceNotFoundException:
         return
 
     microsoft_sentinel_service = providers.get_microsoft_sentinel_service(

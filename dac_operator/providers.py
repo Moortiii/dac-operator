@@ -1,4 +1,7 @@
+import kubernetes.client
+
 from dac_operator.config import get_settings
+from dac_operator.ext.kubernetes_client import KubernetesClient
 from dac_operator.microsoft_sentinel import (
     microsoft_sentinel_repository,
     microsoft_sentinel_service,
@@ -18,6 +21,13 @@ def get_microsoft_sentinel_repository(
         resource_group_id=resource_group_id,
         workspace_id=workspace_id,
     )
+
+
+def get_kubernetes_client(
+    core_api: kubernetes.client.CoreV1Api,
+    custom_objects_api: kubernetes.client.CustomObjectsApi,
+):
+    return KubernetesClient(custom_objects_api=custom_objects_api, core_api=core_api)
 
 
 def get_microsoft_sentinel_service(
