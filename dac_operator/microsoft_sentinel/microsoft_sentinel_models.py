@@ -61,6 +61,11 @@ TriggerOperator = Literal["Equal", "GreaterThan", "LessThan", "NotEqual"]
 AlertSeverity = Literal["High", "Medium", "Low", "Informational"]
 
 
+class AnalyticsRuleStatus(BaseModel):
+    enabled: bool
+    deployed: bool
+
+
 class BaseModelWithConfig(BaseModel):
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 

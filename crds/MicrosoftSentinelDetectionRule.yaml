@@ -21,6 +21,10 @@ spec:
           type: string
           jsonPath: .status.create_detection_rule.deployed
           description: "Checks if the Detection Rule is deployed to Microsoft Sentinel"
+        - name: Enabled
+          type: string
+          jsonPath: .status.create_detection_rule.enabled
+          description: "Checks if the Detection Rule is enabled in Microsoft Sentinel"
         - name: Message
           type: string
           jsonPath: .status.create_detection_rule.message
