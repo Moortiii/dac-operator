@@ -73,6 +73,9 @@ class MicrosoftSentinelRepository:
             )
             response.raise_for_status()
         except httpx.HTTPStatusError as err:
+            if err.response.status_code == 404:
+                return None
+
             self._logger.exception(
                 f"An error occured when fetching Analytic rule '{analytic_rule_id}'. Response: {err.response}"  # noqa: E501
             )

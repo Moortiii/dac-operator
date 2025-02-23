@@ -65,7 +65,16 @@ async def create_detection_rule(spec, **kwargs):
         ),
     )
 
-    return {"deployed": True}
+    is_deployed = await microsoft_sentinel_service.is_deployed(
+        analytic_rule_id=microsoft_sentinel_service._compute_analytics_rule_id(
+            rule_name=kwargs["name"]
+        )
+    )
+
+    return {
+        "deployed": "Deployed" if is_deployed else "Not deployed",
+        "message": "This field will contain additional information",
+    }
 
 
 @kopf.on.delete("microsoftsentineldetectionrules")  # type: ignore
