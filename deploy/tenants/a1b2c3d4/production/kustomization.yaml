@@ -10,3 +10,9 @@ patches:
       kind: MicrosoftSentinelDetectionRule
       name: example-detection-rule-1
     path: ./patches/disable_detection_rule_1.yaml
+  - target:
+      group: buildrlabs.io
+      version: v1
+      kind: MicrosoftSentinelDetectionRule
+      name: example-detection-rule-1
+    path: ../../../common_patches/detection_rule_1_update_query_suffix.yaml
