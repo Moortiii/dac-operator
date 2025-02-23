@@ -49,4 +49,4 @@ class MicrosoftSentinelService:
         rule = await self._repository.get_analytics_rule(
             analytic_rule_id=analytic_rule_id
         )
-        return rule is None
+        return rule is not None
