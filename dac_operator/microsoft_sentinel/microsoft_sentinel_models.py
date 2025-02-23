@@ -124,6 +124,8 @@ class ScheduledAlertRuleProperties(BaseModelWithConfig):
     displayName: str
     enabled: bool
     query: str
+    query_suffix: str = Field("", exclude=True, alias="queryPrefix")
+    query_prefix: str = Field("", exclude=True, alias="querySuffix")
     query_frequency: str = Field("PT1H", alias="queryFrequency")
     query_period: str = Field("PT1H", alias="queryPeriod")
     suppression_duration: str = Field(..., alias="suppressionDuration")

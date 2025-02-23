@@ -45,6 +45,8 @@ async def create_detection_rule(spec, **kwargs):
                 enabled=spec.get("enabled", True),
                 description=spec.get("description", ""),
                 query=spec["query"],
+                query_prefix=spec.get("queryPrefix", ""),  # type: ignore
+                query_suffix=spec.get("querySuffix", ""),  # type: ignore
                 query_frequency=spec.get("queryFrequency", "PT1H"),  # type: ignore
                 query_period=spec.get("queryPeriod", "PT1H"),  # type: ignore
                 severity=spec.get("severity", "Informational"),
