@@ -52,6 +52,8 @@ This isn't usually a problem in production where Detection Rules are relatively 
 - [x] Fetch information about which workspace to use etc. in the kopf-controller from the customer configmap
 - [x] Include a status column on the Detection Rule that indicates if it is deployed upstream or not
 - [x] Include a status column on the Detection Rule that indicates if it is enabled upstream or not
+- [ ] Add support for automation rules, analytics workbooks etc.
+- [ ] Consider support for fetching third-party rules (e.g. those added via Content Hub, marking them as 'external' but generating Kubernetes resources for them)
 - [ ] Add the option to include a query prefix, and query suffix, e.g. to support basic filter-macros for Tenants.
 - [ ] Include a status column on the Detection Rule that describes _why_ it isn't deployed, if that is the case
 - [ ] Store the expiry when authenticating to prevent authenticating again for each Detection Rule to deploy
