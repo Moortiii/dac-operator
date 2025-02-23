@@ -29,6 +29,18 @@ class MicrosoftSentinelService:
         # Generate a random uuid to use as the ID for the Analytic Rule
         analytic_rule_id = self._compute_analytics_rule_id(rule_name=rule_name)
 
+        # Support optional query prefix
+        if payload.properties.query_prefix:
+            payload.properties.query = (
+                f"{payload.properties.query_prefix} {payload.properties.query}"
+            )
+
+        # Support optional query suffix
+        if payload.properties.query_suffix:
+            payload.properties.query = (
+                f"{payload.properties.query} {payload.properties.query_suffix} "
+            )
+
         await self._repository.create_or_update_scheduled_alert_rule(
             payload=payload, analytic_rule_id=analytic_rule_id
         )
