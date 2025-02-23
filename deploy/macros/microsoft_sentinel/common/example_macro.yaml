@@ -3,5 +3,5 @@ kind: MicrosoftSentinelMacro
 metadata:
   name: example-macro-1
 spec:
-  query: |
+  content: |
     | extend ExampleColumn = "This is a macro example"
