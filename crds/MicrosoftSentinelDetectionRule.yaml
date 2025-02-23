@@ -29,6 +29,10 @@ spec:
           type: string
           jsonPath: .status.create_detection_rule.message
           description: "Additional information about the deployment status"
+        - name: Rule type
+          type: string
+          jsonPath: .status.create_detection_rule.rule_type
+          description: "The type of Microsoft Sentinel Detection Rule"
       schema:
         openAPIV3Schema:
           type: object

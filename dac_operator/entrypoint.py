@@ -74,6 +74,7 @@ async def create_detection_rule(spec, **kwargs):
     return {
         "deployed": "Deployed" if status.deployed else "Not deployed",
         "enabled": "Enabled" if status.enabled else "Disabled",
+        "rule_type": status.rule_type,
         "message": "This field will contain additional information",
     }
 
