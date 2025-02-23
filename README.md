@@ -52,9 +52,9 @@ This isn't usually a problem in production where Detection Rules are relatively 
 - [x] Fetch information about which workspace to use etc. in the kopf-controller from the customer configmap
 - [x] Include a status column on the Detection Rule that indicates if it is deployed upstream or not
 - [x] Include a status column on the Detection Rule that indicates if it is enabled upstream or not
-- [ ] If PUT request when creating Detection Rules fails for any reason, show this reason in the status column
-- [ ] If one or more referenced macros don't exist, make sure to reflect this in the status and deploy column
-- [ ] Add support for 'macros' (SPL-equivalent) that can be injected anywhere in a query.
+- [x] If PUT request when creating Detection Rules fails for any reason, show this reason in the status column
+- [x] If one or more referenced macros don't exist, make sure to reflect this in the status and deploy column
+- [x] Add support for 'macros' (SPL-equivalent) that can be injected anywhere in a query.
 - [ ] Create converter for Content Hub rules, so that it's easy to export rules and add them to the Detection library.
 - [ ] Add support for automation rules, analytics workbooks etc.
 - [ ] Consider support for fetching third-party rules (e.g. those added via Content Hub, marking them as 'external' but generating Kubernetes resources for them)
