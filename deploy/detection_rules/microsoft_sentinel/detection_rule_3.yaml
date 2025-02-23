@@ -6,7 +6,7 @@ spec:
   name: Example Rule 3
   enabled: true
   description: This is a different description
-  query: "Heartbeat"
+  query: Heartbeat `${non-existent-macro}`
   queryFrequency: PT1H
   queryPeriod: P2DT1H30M
   severity: Medium
