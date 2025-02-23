@@ -65,14 +65,15 @@ async def create_detection_rule(spec, **kwargs):
         ),
     )
 
-    is_deployed = await microsoft_sentinel_service.is_deployed(
+    status = await microsoft_sentinel_service.status(
         analytic_rule_id=microsoft_sentinel_service._compute_analytics_rule_id(
             rule_name=kwargs["name"]
         )
     )
 
     return {
-        "deployed": "Deployed" if is_deployed else "Not deployed",
+        "deployed": "Deployed" if status.deployed else "Not deployed",
+        "enabled": "Enabled" if status.enabled else "Disabled",
         "message": "This field will contain additional information",
     }
 

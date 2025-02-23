@@ -39,9 +39,11 @@ class MicrosoftSentinelService:
             analytic_rule_id=analytic_rule_id
         )
 
-    async def is_deployed(self, analytic_rule_id: str) -> bool:
+    async def status(
+        self, analytic_rule_id: str
+    ) -> microsoft_sentinel_models.AnalyticsRuleStatus:
         """
-        Check if a given Detection Rule is deployed remotely
+        Checks the status of a given Detection Rule upstream
 
         Args:
             rule_id(str): The ID of the upstream rule
@@ -49,4 +51,12 @@ class MicrosoftSentinelService:
         rule = await self._repository.get_analytics_rule(
             analytic_rule_id=analytic_rule_id
         )
-        return rule is not None
+        deployed = rule is not None
+
+        enabled = False
+        if deployed:
+            enabled = rule["properties"]["enabled"]
+
+        return microsoft_sentinel_models.AnalyticsRuleStatus(
+            deployed=deployed, enabled=enabled
+        )

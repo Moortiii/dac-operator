@@ -51,6 +51,7 @@ This isn't usually a problem in production where Detection Rules are relatively 
 
 - [x] Fetch information about which workspace to use etc. in the kopf-controller from the customer configmap
 - [x] Include a status column on the Detection Rule that indicates if it is deployed upstream or not
+- [x] Include a status column on the Detection Rule that indicates if it is enabled upstream or not
 - [ ] Include a status column on the Detection Rule that describes _why_ it isn't deployed, if that is the case
 - [ ] Store the expiry when authenticating to prevent authenticating again for each Detection Rule to deploy
 - [ ] Make it possible to test Detection Rules prior to deployment
