@@ -1,19 +1,65 @@
 import hashlib
 
+from loguru import logger as default_loguru_logger
+
+from dac_operator.crd import crd_models
+from dac_operator.ext import kubernetes_exceptions, kubernetes_models
+from dac_operator.ext.kubernetes_client import KubernetesClient
 from dac_operator.microsoft_sentinel import (
+    microsoft_sentinel_exceptions,
     microsoft_sentinel_models,
     microsoft_sentinel_repository,
+)
+from dac_operator.microsoft_sentinel.microsoft_sentinel_macro_service import (
+    MicrosoftSentinelMacroService,
 )
 
 
 class MicrosoftSentinelService:
     def __init__(
-        self, repository: microsoft_sentinel_repository.MicrosoftSentinelRepository
+        self,
+        repository: microsoft_sentinel_repository.MicrosoftSentinelRepository,
+        kubernetes_client: KubernetesClient,
+        namespace: str,
+        logger=default_loguru_logger,
     ):
         self._repository = repository
+        self._kubernetes_client = kubernetes_client
+        self._logger = logger
+        self._namespace = namespace
 
     def _compute_analytics_rule_id(self, rule_name: str) -> str:
         return hashlib.sha1(rule_name.encode()).hexdigest()
+
+    async def inject_macros(
+        self, query: str, rule_name: str
+    ) -> microsoft_sentinel_models.MacroInjectionResult:
+        macro_service = MicrosoftSentinelMacroService()
+
+        for macro_name in macro_service.get_used_macros(query=query):
+            try:
+                macro = self._kubernetes_client.get_namespaced_custom_object(
+                    group="buildrlabs.io",
+                    version="v1",
+                    namespace=self._namespace,
+                    plural="microsoftsentinelmacros",
+                    name=macro_name,
+                    return_type=crd_models.MicrosoftSentinelMacro,
+                )
+                query = macro_service.replace_macro(
+                    text=query, macro_name=macro_name, replacement=macro.spec.content
+                )
+            except kubernetes_exceptions.ResourceNotFoundException:
+                error_message = (
+                    f"The macro '{macro_name}' is referenced in '{rule_name}', "
+                    "but is not deployed in the Tenant namespace."
+                )
+                self._logger.error(error_message)
+                return microsoft_sentinel_models.MacroInjectionResult(
+                    success=False, query=query, message=error_message
+                )
+
+        return microsoft_sentinel_models.MacroInjectionResult(success=True, query=query)
 
     async def create_or_update(
         self,

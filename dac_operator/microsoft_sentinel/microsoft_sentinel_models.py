@@ -64,6 +64,12 @@ DetectionRuleTypes = Literal[
 ]
 
 
+class MacroInjectionResult(BaseModel):
+    success: bool
+    query: str
+    message: str = ""
+
+
 class AnalyticsRuleStatus(BaseModel):
     enabled: bool
     deployed: bool
