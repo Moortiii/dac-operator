@@ -1,112 +1,117 @@
+from enum import StrEnum
+from typing import Literal
+
 import kopf
 from kubernetes import client
-from loguru import logger
-from pydantic import BaseModel, model_serializer
+from pydantic import BaseModel
 
 from dac_operator import providers
-from dac_operator.crd import crd_models
-from dac_operator.ext import kubernetes_exceptions
-from dac_operator.microsoft_sentinel import microsoft_sentinel_models
-from dac_operator.microsoft_sentinel.microsoft_sentinel_macro_service import (
-    MicrosoftSentinelMacroService,
+from dac_operator.microsoft_sentinel import (
+    microsoft_sentinel_exceptions,
+    microsoft_sentinel_models,
 )
 
 
-class CreateDetectionRuleStatus(BaseModel):
-    deployed: bool = False
-    enabled: bool = False
+class ErrorMessages(StrEnum):
+    initialization_error = "Unable to configure provider, see controller logs."
+    create_error = "Unable to create Detection Rule upstream."
+    delete_error = "Unable to delete Detection Rule upstream."
+
+
+class DetectionRuleStatus(BaseModel):
+    deployed: Literal["Deployed", "Not deployed", "Unknown"] = "Unknown"
+    enabled: Literal["Enabled", "Disabled", "Unknown"] = "Unknown"
     rule_type: str = "Unknown"
     message: str = ""
-
-    @model_serializer
-    def serialize(self):
-        return {
-            "deployed": "Deployed" if self.deployed else "Not deployed",
-            "enabled": "Enabled" if self.enabled else "Disabled",
-            "rule_type": self.rule_type,
-            "message": self.message,
-        }
 
 
 @kopf.timer("microsoftsentineldetectionrules", interval=30.0)  # type: ignore
 async def create_detection_rule(spec, **kwargs):
-    status = CreateDetectionRuleStatus()
-
+    status = DetectionRuleStatus()
     namespace = kwargs["namespace"]
-
-    kubernetes_client = providers.get_kubernetes_client(
-        core_api=client.CoreV1Api(), custom_objects_api=client.CustomObjectsApi()
-    )
+    rule_name = kwargs["name"]
 
     try:
-        configmap = kubernetes_client.get_config_map(
-            name="microsoft-sentinel-configuration", namespace=namespace
+        microsoft_sentinel_service = providers.get_microsoft_sentinel_service(
+            kubernetes_client=providers.get_kubernetes_client(
+                core_api=client.CoreV1Api(),
+                custom_objects_api=client.CustomObjectsApi(),
+            ),
+            namespace=namespace,
         )
-    except kubernetes_exceptions.ResourceNotFoundException:
-        status.message = "Unable to configure provider, see controller logs."
+    except microsoft_sentinel_exceptions.ServiceConfigurationException:
+        status.message = ErrorMessages.initialization_error.value
         return status.model_dump()
 
-    microsoft_sentinel_service = providers.get_microsoft_sentinel_service(
-        tenant_id=configmap.data["azure_tenant_id"],
-        workspace_id=configmap.data["azure_workspace_id"],
-        subscription_id=configmap.data["azure_subscription_id"],
-        resource_group_id=configmap.data["azure_resource_group_id"],
+    # Inject main query
+    query = spec.get("query", "")
+    result = await microsoft_sentinel_service.inject_macros(
+        query=query, rule_name=rule_name
     )
 
-    query = spec["query"]
-    macro_service = MicrosoftSentinelMacroService()
-    for macro_name in macro_service.get_used_macros(query=query):
-        try:
-            macro = kubernetes_client.get_namespaced_custom_object(
-                group="buildrlabs.io",
-                version="v1",
-                namespace=namespace,
-                plural="microsoftsentinelmacros",
-                name=macro_name,
-                return_type=crd_models.MicrosoftSentinelMacro,
-            )
-            query = macro_service.replace_macro(
-                text=query, macro_name=macro_name, replacement=macro.spec.content
-            )
-        except kubernetes_exceptions.ResourceNotFoundException:
-            error_message = (
-                f"The macro '{macro_name}' is referenced in '{kwargs['name']}', "
-                "but is not deployed in the Tenant namespace."
-            )
-            logger.error(error_message)
-            status.message = error_message
-            return status.model_dump()
+    if not result.success:
+        status.message = result.message
+        return status.model_dump()
 
-    # TODO: Work out serialization / validation alias to prevent incorrect type errors
-    await microsoft_sentinel_service.create_or_update(
-        rule_name=kwargs["name"],
-        payload=microsoft_sentinel_models.CreateScheduledAlertRule(
-            properties=microsoft_sentinel_models.ScheduledAlertRuleProperties(  # type: ignore
-                displayName=spec["name"],
-                enabled=spec.get("enabled", True),
-                description=spec.get("description", ""),
-                query=query,
-                query_prefix=spec.get("queryPrefix", ""),  # type: ignore
-                query_suffix=spec.get("querySuffix", ""),  # type: ignore
-                query_frequency=spec.get("queryFrequency", "PT1H"),  # type: ignore
-                query_period=spec.get("queryPeriod", "PT1H"),  # type: ignore
-                severity=spec.get("severity", "Informational"),
-                custom_details=spec.get("customDetails", {}),  # type: ignore
-                suppression_duration=spec.get("suppressionDuration", "PT1H"),  # type: ignore
-                suppression_enabled=spec.get("suppressionEnabled", False),  # type: ignore
-                alert_details_override=spec.get("alertDetailsOverride"),  # type: ignore
-                tactics=spec.get("tactics", []),
-                techniques=spec.get("techniques", []),
-                alert_rule_template_name=spec.get("alertRuleTemplateName"),  # type: ignore
-                event_grouping_settings=spec.get("eventGroupingSettings"),  # type: ignore
-                incident_configuration=spec.get("incidentConfiguration"),  # type: ignore
-                entity_mappings=spec.get("entityMappings", []),  # type: ignore
-                template_version=spec.get("templateVersion"),  # type: ignore
-                trigger_threshold=spec.get("triggerThreshold", 1),  # type: ignore
-                trigger_operator=spec.get("triggerOperator", "GreaterThan"),  # type: ignore
+    query = result.query
+
+    # Inject macros into query prefix
+    query_prefix = spec.get("queryPrefix", "")
+    result = await microsoft_sentinel_service.inject_macros(
+        query=query_prefix, rule_name=rule_name
+    )
+
+    if not result.success:
+        status.message = result.message
+        return status.model_dump()
+
+    query_prefix = result.query
+
+    # Inject macros into query suffix
+    query_suffix = spec.get("querySuffix", "")
+    result = await microsoft_sentinel_service.inject_macros(
+        query=query_suffix, rule_name=rule_name
+    )
+
+    if not result.success:
+        status.message = result.message
+        return status.model_dump()
+
+    query_suffix = result.query
+
+    try:
+        await microsoft_sentinel_service.create_or_update(
+            rule_name=kwargs["name"],
+            payload=microsoft_sentinel_models.CreateScheduledAlertRule(
+                properties=microsoft_sentinel_models.ScheduledAlertRuleProperties(  # type: ignore
+                    displayName=spec["name"],
+                    enabled=spec.get("enabled", True),
+                    description=spec.get("description", ""),
+                    query=query,
+                    query_prefix=query_prefix,  # type: ignore
+                    query_suffix=query_suffix,  # type: ignore
+                    query_frequency=spec.get("queryFrequency", "PT1H"),  # type: ignore
+                    query_period=spec.get("queryPeriod", "PT1H"),  # type: ignore
+                    severity=spec.get("severity", "Informational"),
+                    custom_details=spec.get("customDetails", {}),  # type: ignore
+                    suppression_duration=spec.get("suppressionDuration", "PT1H"),  # type: ignore
+                    suppression_enabled=spec.get("suppressionEnabled", False),  # type: ignore
+                    alert_details_override=spec.get("alertDetailsOverride"),  # type: ignore
+                    tactics=spec.get("tactics", []),
+                    techniques=spec.get("techniques", []),
+                    alert_rule_template_name=spec.get("alertRuleTemplateName"),  # type: ignore
+                    event_grouping_settings=spec.get("eventGroupingSettings"),  # type: ignore
+                    incident_configuration=spec.get("incidentConfiguration"),  # type: ignore
+                    entity_mappings=spec.get("entityMappings", []),  # type: ignore
+                    template_version=spec.get("templateVersion"),  # type: ignore
+                    trigger_threshold=spec.get("triggerThreshold", 1),  # type: ignore
+                    trigger_operator=spec.get("triggerOperator", "GreaterThan"),  # type: ignore
+                ),
             ),
-        ),
-    )
+        )
+    except Exception:
+        status.message = ErrorMessages.create_error
+        return status.model_dump()
 
     analytics_rule_status = await microsoft_sentinel_service.status(
         analytic_rule_id=microsoft_sentinel_service._compute_analytics_rule_id(
@@ -114,33 +119,36 @@ async def create_detection_rule(spec, **kwargs):
         )
     )
     status.rule_type = analytics_rule_status.rule_type
-    status.deployed = analytics_rule_status.deployed
-    status.enabled = analytics_rule_status.enabled
+    status.deployed = "Deployed" if analytics_rule_status.deployed else "Not deployed"
+    status.enabled = "Enabled" if analytics_rule_status.enabled else "Disabled"
 
     return status.model_dump()
 
 
 @kopf.on.delete("microsoftsentineldetectionrules")  # type: ignore
 async def remove_detection_rule(spec, **kwargs):
-    kubernetes_client = providers.get_kubernetes_client(
-        core_api=client.CoreV1Api(), custom_objects_api=client.CustomObjectsApi()
-    )
+    status = DetectionRuleStatus(deployed="Deployed")
 
     try:
-        configmap = kubernetes_client.get_config_map(
-            name="microsoft-sentinel-configuration", namespace=kwargs["namespace"]
+        microsoft_sentinel_service = providers.get_microsoft_sentinel_service(
+            kubernetes_client=providers.get_kubernetes_client(
+                core_api=client.CoreV1Api(),
+                custom_objects_api=client.CustomObjectsApi(),
+            ),
+            namespace=kwargs["namespace"],
         )
-    except kubernetes_exceptions.ResourceNotFoundException:
-        return
+    except microsoft_sentinel_exceptions.ServiceConfigurationException:
+        status.message = ErrorMessages.initialization_error.value
+        return status.model_dump()
 
-    microsoft_sentinel_service = providers.get_microsoft_sentinel_service(
-        tenant_id=configmap.data["azure_tenant_id"],
-        workspace_id=configmap.data["azure_workspace_id"],
-        subscription_id=configmap.data["azure_subscription_id"],
-        resource_group_id=configmap.data["azure_resource_group_id"],
-    )
+    try:
+        await microsoft_sentinel_service.remove(rule_name=kwargs["name"])
+    except Exception:
+        status.message = ErrorMessages.initialization_error
+        return status.model_dump()
 
-    await microsoft_sentinel_service.remove(rule_name=kwargs["name"])
+    status.deployed = "Deployed"
+    return status.model_dump()
 
 
 # microsoft_sentinel_models.IncidentConfiguration(
