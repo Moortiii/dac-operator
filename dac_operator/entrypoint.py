@@ -4,19 +4,24 @@ from kubernetes import client
 from loguru import logger
 
 from dac_operator import providers
+from dac_operator.crd import crd_models
 from dac_operator.ext import kubernetes_models
 from dac_operator.microsoft_sentinel import microsoft_sentinel_models
+from dac_operator.microsoft_sentinel.microsoft_sentinel_macro_service import (
+    MicrosoftSentinelMacroService,
+)
 
 
 @kopf.timer("microsoftsentineldetectionrules", interval=30.0)  # type: ignore
 async def create_detection_rule(spec, **kwargs):
     configmap_name = "microsoft-sentinel-configuration"
 
-    v1 = client.CoreV1Api()
+    v1_api = client.CoreV1Api()
+    custom_objects_api = client.CustomObjectsApi()
 
     try:
         configmap = kubernetes_models.ConfigMap.model_validate(
-            v1.read_namespaced_config_map(
+            v1_api.read_namespaced_config_map(
                 name=configmap_name, namespace=kwargs["namespace"]
             ),
             from_attributes=True,
@@ -35,6 +40,29 @@ async def create_detection_rule(spec, **kwargs):
         subscription_id=configmap.data["azure_subscription_id"],
         resource_group_id=configmap.data["azure_resource_group_id"],
     )
+    query = spec["query"]
+
+    macro_service = MicrosoftSentinelMacroService()
+
+    for macro_name in macro_service.get_used_macros(query=query):
+        try:
+            macro = crd_models.MicrosoftSentinelMacro.model_validate(
+                custom_objects_api.get_namespaced_custom_object(
+                    group="buildrlabs.io",
+                    version="v1",
+                    namespace=kwargs["namespace"],
+                    plural="microsoftsentinelmacros",
+                    name=macro_name,
+                )
+            )
+            query = macro_service.replace_macro(
+                text=query, macro_name=macro_name, replacement=macro.spec.content
+            )
+        except kubernetes.client.exceptions.ApiException:
+            logger.error(
+                f"The macro '{macro_name}' is referenced in '{kwargs['name']}', "
+                "but is not deployed in the Tenant namespace."
+            )
 
     # TODO: Work out serialization / validation alias to prevent incorrect type errors
     await microsoft_sentinel_service.create_or_update(
@@ -44,7 +72,7 @@ async def create_detection_rule(spec, **kwargs):
                 displayName=spec["name"],
                 enabled=spec.get("enabled", True),
                 description=spec.get("description", ""),
-                query=spec["query"],
+                query=query,
                 query_prefix=spec.get("queryPrefix", ""),  # type: ignore
                 query_suffix=spec.get("querySuffix", ""),  # type: ignore
                 query_frequency=spec.get("queryFrequency", "PT1H"),  # type: ignore
@@ -85,11 +113,11 @@ async def create_detection_rule(spec, **kwargs):
 async def remove_detection_rule(spec, **kwargs):
     configmap_name = "microsoft-sentinel-configuration"
 
-    v1 = client.CoreV1Api()
+    v1_api = client.CoreV1Api()
 
     try:
         configmap = kubernetes_models.ConfigMap.model_validate(
-            v1.read_namespaced_config_map(
+            v1_api.read_namespaced_config_map(
                 name=configmap_name, namespace=kwargs["namespace"]
             ),
             from_attributes=True,
