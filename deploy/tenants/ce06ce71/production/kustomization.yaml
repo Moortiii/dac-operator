@@ -3,3 +3,10 @@ kind: Kustomization
 resources:
   - ../base
   - configmap.yaml
+patches:
+  - target:
+      group: buildrlabs.io
+      version: v1
+      kind: MicrosoftSentinelDetectionRule
+      name: example-detection-rule-3
+    path: ./patches/disable_detection_rule_3.yaml
