@@ -1,0 +1,7 @@
+apiVersion: buildrlabs.io/v1
+kind: MicrosoftSentinelMacro
+metadata:
+  name: example-macro-1
+spec:
+  query: |
+    | extend ExampleColumn = "This is a macro example"
