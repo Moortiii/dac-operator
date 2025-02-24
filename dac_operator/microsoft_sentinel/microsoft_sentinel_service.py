@@ -61,7 +61,7 @@ class MicrosoftSentinelService:
 
         return microsoft_sentinel_models.MacroInjectionResult(success=True, query=query)
 
-    async def create_or_update(
+    async def create_or_update_analytics_rule(
         self,
         rule_name: str,
         payload: microsoft_sentinel_models.CreateScheduledAlertRule,
@@ -91,13 +91,13 @@ class MicrosoftSentinelService:
             payload=payload, analytic_rule_id=analytic_rule_id
         )
 
-    async def remove(self, rule_name: str):
+    async def remove_analytics_rule(self, rule_name: str):
         analytic_rule_id = self._compute_analytics_rule_id(rule_name=rule_name)
         await self._repository.remove_scheduled_alert_rule(
             analytic_rule_id=analytic_rule_id
         )
 
-    async def status(
+    async def analytics_rule_status(
         self, analytic_rule_id: str
     ) -> microsoft_sentinel_models.AnalyticsRuleStatus:
         """

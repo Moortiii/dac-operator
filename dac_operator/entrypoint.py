@@ -80,7 +80,7 @@ async def create_detection_rule(spec, **kwargs):
     query_suffix = result.query
 
     try:
-        await microsoft_sentinel_service.create_or_update(
+        await microsoft_sentinel_service.create_or_update_analytics_rule(
             rule_name=kwargs["name"],
             payload=microsoft_sentinel_models.CreateScheduledAlertRule(
                 properties=microsoft_sentinel_models.ScheduledAlertRuleProperties(  # type: ignore
@@ -113,7 +113,7 @@ async def create_detection_rule(spec, **kwargs):
         status.message = ErrorMessages.create_error
         return status.model_dump()
 
-    analytics_rule_status = await microsoft_sentinel_service.status(
+    analytics_rule_status = await microsoft_sentinel_service.analytics_rule_status(
         analytic_rule_id=microsoft_sentinel_service._compute_analytics_rule_id(
             rule_name=kwargs["name"]
         )
@@ -142,24 +142,10 @@ async def remove_detection_rule(spec, **kwargs):
         return status.model_dump()
 
     try:
-        await microsoft_sentinel_service.remove(rule_name=kwargs["name"])
+        await microsoft_sentinel_service.remove_analytics_rule(rule_name=kwargs["name"])
     except Exception:
         status.message = ErrorMessages.initialization_error
         return status.model_dump()
 
     status.deployed = "Deployed"
     return status.model_dump()
-
-
-# microsoft_sentinel_models.IncidentConfiguration(
-#     create_incident=spec.get("createIncident", True),
-#     grouping_configuration=microsoft_sentinel_models.GroupingConfiguration(
-#         group_by_alert_details=[],
-#         group_by_custom_details=[],
-#         group_by_entities=[],
-#         enabled=True,
-#         lookback_duration="P15H",
-#         matching_method="AllEntities",
-#         reopen_closed_incident=False,
-#     ),
-# ),
