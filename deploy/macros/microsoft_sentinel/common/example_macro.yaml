@@ -4,4 +4,4 @@ metadata:
   name: example-macro-1
 spec:
   content: |
-    | extend ExampleColumn = "This is a macro example"
+    | extend ExampleColumn = "This is a changed macro example"
