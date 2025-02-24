@@ -55,11 +55,12 @@ This isn't usually a problem in production where Detection Rules are relatively 
 - [x] If PUT request when creating Detection Rules fails for any reason, show this reason in the status column
 - [x] If one or more referenced macros don't exist, make sure to reflect this in the status and deploy column
 - [x] Add support for 'macros' (SPL-equivalent) that can be injected anywhere in a query.
+- [x] Add the option to include a query prefix, and query suffix, e.g. to support basic filter-macros for Tenants.
+- [x] Include a status column on the Detection Rule that describes _why_ it isn't deployed, if that is the case
+- [ ] Fetch MITRE Information in order to showcase how we can perform visualizations across multiple products / tenants
 - [ ] Create converter for Content Hub rules, so that it's easy to export rules and add them to the Detection library.
 - [ ] Add support for automation rules, analytics workbooks etc.
 - [ ] Consider support for fetching third-party rules (e.g. those added via Content Hub, marking them as 'external' but generating Kubernetes resources for them)
-- [ ] Add the option to include a query prefix, and query suffix, e.g. to support basic filter-macros for Tenants.
-- [ ] Include a status column on the Detection Rule that describes _why_ it isn't deployed, if that is the case
 - [ ] Store the expiry when authenticating to prevent authenticating again for each Detection Rule to deploy
 - [ ] Make it possible to test Detection Rules prior to deployment
 - [ ] Set up a "staging"-cluster in Kind that can be used to verify changes (different and more easily solvable than automated testing)
