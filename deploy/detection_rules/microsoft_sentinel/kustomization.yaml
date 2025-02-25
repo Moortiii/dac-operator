@@ -5,3 +5,4 @@ resources:
   - detection_rule_1.yaml
   - detection_rule_2.yaml
   - detection_rule_3.yaml
+  - detection_rule_4.yaml
