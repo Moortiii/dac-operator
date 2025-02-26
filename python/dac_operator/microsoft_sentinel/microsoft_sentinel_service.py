@@ -3,10 +3,9 @@ import hashlib
 from loguru import logger as default_loguru_logger
 
 from dac_operator.crd import crd_models
-from dac_operator.ext import kubernetes_exceptions, kubernetes_models
+from dac_operator.ext import kubernetes_exceptions
 from dac_operator.ext.kubernetes_client import KubernetesClient
 from dac_operator.microsoft_sentinel import (
-    microsoft_sentinel_exceptions,
     microsoft_sentinel_models,
     microsoft_sentinel_repository,
 )
@@ -29,6 +28,9 @@ class MicrosoftSentinelService:
         self._namespace = namespace
 
     def _compute_analytics_rule_id(self, rule_name: str) -> str:
+        return hashlib.sha1(rule_name.encode()).hexdigest()
+
+    def _compute_automation_rule_id(self, rule_name: str) -> str:
         return hashlib.sha1(rule_name.encode()).hexdigest()
 
     async def inject_macros(
@@ -89,6 +91,18 @@ class MicrosoftSentinelService:
 
         await self._repository.create_or_update_scheduled_alert_rule(
             payload=payload, analytic_rule_id=analytic_rule_id
+        )
+
+    async def create_or_update_automation_rule(self, rule_name: str, payload: dict):
+        """
+        Create (or update) an automation rule upstream
+
+        Args:
+            payload(...): A valid ... object
+        """
+        automation_rule_id = self._compute_automation_rule_id(rule_name=rule_name)
+        await self._repository.create_or_update_automation_rule(
+            payload=payload, automation_rule_id=automation_rule_id
         )
 
     async def remove_analytics_rule(self, rule_name: str):

@@ -113,6 +113,34 @@ class MicrosoftSentinelRepository:
                 )
                 raise err from None
 
+    async def create_or_update_automation_rule(
+        self,
+        payload: dict,
+        automation_rule_id: str,
+    ):
+        token = await self.authenticate()
+
+        try:
+            response = await self._http_client.put(
+                f"https://management.azure.com/subscriptions/{self._subscription_id}/resourceGroups/{self._resource_group_id}/providers/Microsoft.OperationalInsights/workspaces/{self._workspace_id}/providers/Microsoft.SecurityInsights/automationRules/{automation_rule_id}?api-version=2024-09-01",
+                headers={"Authorization": f"Bearer {token}"},
+                json=payload,
+            )
+            response.raise_for_status()
+        except httpx.HTTPStatusError as err:
+            if err.response.status_code == 409:
+                if "was recently deleted" in err.response.text:
+                    self._logger.info(
+                        f"'{payload['properties'].displayName}' was deleted too recently, retrying later."  # noqa: E501
+                    )
+                else:
+                    self._logger.info("An unknown 409 error occured.")
+            else:
+                self._logger.exception(
+                    f"An error occured while creating Analytics rule: {err.response.text}"  # noqa: E501
+                )
+                raise err from None
+
     async def remove_scheduled_alert_rule(self, analytic_rule_id: str):
         token = await self.authenticate()
 

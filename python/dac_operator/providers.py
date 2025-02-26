@@ -1,8 +1,7 @@
 import kubernetes.client
-from loguru import logger
 
 from dac_operator.config import get_settings
-from dac_operator.ext import kubernetes_exceptions, kubernetes_models
+from dac_operator.ext import kubernetes_exceptions
 from dac_operator.ext.kubernetes_client import KubernetesClient
 from dac_operator.microsoft_sentinel import (
     microsoft_sentinel_exceptions,
