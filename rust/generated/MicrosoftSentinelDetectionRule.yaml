@@ -31,23 +31,229 @@ spec:
       jsonPath: .status.create_detection_rule.rule_type
       name: Rule type
       type: string
-    name: v1
+    name: 2024-09-01
     schema:
       openAPIV3Schema:
         description: Auto-generated derived type for MicrosoftSentinelDetectionRuleSpec via `CustomResource`
         properties:
           spec:
             properties:
-              query:
+              kind:
+                default: Scheduled
                 type: string
-              query_prefix:
-                nullable: true
-                type: string
-              query_suffix:
-                nullable: true
-                type: string
+              properties:
+                properties:
+                  alertDetailsOverride:
+                    nullable: true
+                    properties:
+                      alertDescriptionFormat:
+                        nullable: true
+                        type: string
+                      alertDisplayNameFormat:
+                        nullable: true
+                        type: string
+                      alertSeverityColumnName:
+                        nullable: true
+                        type: string
+                      alertTacticsColumnName:
+                        nullable: true
+                        type: string
+                    type: object
+                  alertRuleTemplateName:
+                    nullable: true
+                    type: string
+                  customDetails:
+                    additionalProperties: true
+                    nullable: true
+                    type: object
+                  description:
+                    nullable: true
+                    type: string
+                  displayName:
+                    type: string
+                  enabled:
+                    type: boolean
+                  entityMappings:
+                    nullable: true
+                    properties:
+                      entityType:
+                        enum:
+                        - Account
+                        - AzureResource
+                        - CloudApplication
+                        - DNS
+                        - File
+                        - FileHash
+                        - Host
+                        - IP
+                        - MailCluster
+                        - MailMessage
+                        - Mailbox
+                        - Malware
+                        - Process
+                        - RegistryKey
+                        - RegistryValue
+                        - SecurityGroup
+                        - SubmissionMail
+                        - URL
+                        type: string
+                      fieldMappings:
+                        items:
+                          properties:
+                            columnName:
+                              type: string
+                            identifier:
+                              type: string
+                          required:
+                          - columnName
+                          - identifier
+                          type: object
+                        type: array
+                    required:
+                    - entityType
+                    - fieldMappings
+                    type: object
+                  eventGroupingSettings:
+                    nullable: true
+                    properties:
+                      aggregationKind:
+                        enum:
+                        - AlertPerResult
+                        - SingleAlert
+                        type: string
+                    required:
+                    - aggregationKind
+                    type: object
+                  incidentConfiguration:
+                    nullable: true
+                    properties:
+                      createIncident:
+                        type: boolean
+                      groupingConfiguration:
+                        properties:
+                          enabled:
+                            type: boolean
+                          groupByAlertDetails:
+                            items:
+                              properties:
+                                displayName:
+                                  type: string
+                                severity:
+                                  enum:
+                                  - High
+                                  - Informational
+                                  - Low
+                                  - Medium
+                                  type: string
+                              required:
+                              - displayName
+                              - severity
+                              type: object
+                            type: array
+                          groupByCustomDetails:
+                            items:
+                              type: string
+                            type: array
+                          groupByEntities:
+                            items:
+                              enum:
+                              - Account
+                              - AzureResource
+                              - CloudApplication
+                              - DNS
+                              - File
+                              - FileHash
+                              - Host
+                              - IP
+                              - MailCluster
+                              - MailMessage
+                              - Mailbox
+                              - Malware
+                              - Process
+                              - RegistryKey
+                              - RegistryValue
+                              - SecurityGroup
+                              - SubmissionMail
+                              - URL
+                              type: string
+                            type: array
+                          lookbackDuration:
+                            type: string
+                          matchingMethod:
+                            enum:
+                            - AllEntities
+                            - AnyAlert
+                            - Selected
+                            type: string
+                          reopenClosedIncident:
+                            type: boolean
+                        required:
+                        - enabled
+                        - groupByAlertDetails
+                        - groupByCustomDetails
+                        - groupByEntities
+                        - lookbackDuration
+                        - matchingMethod
+                        - reopenClosedIncident
+                        type: object
+                    required:
+                    - createIncident
+                    - groupingConfiguration
+                    type: object
+                  query:
+                    type: string
+                  queryFrequency:
+                    type: string
+                  queryPeriod:
+                    type: string
+                  severity:
+                    enum:
+                    - High
+                    - Informational
+                    - Low
+                    - Medium
+                    type: string
+                  suppressionDuration:
+                    type: string
+                  suppressionEnabled:
+                    type: boolean
+                  tactics:
+                    items:
+                      type: object
+                    nullable: true
+                    type: array
+                  techniques:
+                    items:
+                      type: string
+                    nullable: true
+                    type: array
+                  templateVersion:
+                    nullable: true
+                    type: string
+                  triggerOperator:
+                    enum:
+                    - Equal
+                    - GreaterThan
+                    - LessThan
+                    - NotEqual
+                    type: string
+                  triggerThreshold:
+                    format: int32
+                    type: integer
+                required:
+                - displayName
+                - enabled
+                - query
+                - queryFrequency
+                - queryPeriod
+                - severity
+                - suppressionDuration
+                - suppressionEnabled
+                - triggerOperator
+                - triggerThreshold
+                type: object
             required:
-            - query
+            - properties
             type: object
           status:
             nullable: true
