@@ -11,5 +11,11 @@
     "editor.rulers": [88]
   },
   "python.analysis.typeCheckingMode": "basic",
-  "typescript.preferences.importModuleSpecifier": "relative"
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "vs-kubernetes": {
+    "vs-kubernetes.crd-code-completion": "enabled"
+  },
+  "yaml.schemas": {
+    "kubernetes://schema/buildrlabs.io/v1@microsoftsentineldetectionrule": "detection_rules/microsoft_sentinel"
+  }
 }

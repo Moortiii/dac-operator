@@ -43,22 +43,6 @@ pub enum AlertProperty {
     Techniques,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-#[serde(rename_all = "camelCase")]
-struct AlertPropertyMapping {
-    alert_property: AlertProperty,
-    value: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-#[serde(rename_all = "camelCase")]
-struct AlertDetailsOverride {
-    alert_description_format: Option<String>,
-    alert_display_name_format: Option<String>,
-    alert_severity_column_name: Option<String>,
-    alert_tactics_column_name: Option<String>,
-}
-
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "PascalCase")]
 pub enum EntityType {
@@ -95,6 +79,44 @@ pub enum MatchingMethod {
     AllEntities,
     AnyAlert,
     Selected,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "PascalCase")]
+pub enum AttackTactic {
+    Collection,
+    CommandAndControl,
+    CredentialAccess,
+    DefenseEvasion,
+    Discovery,
+    Execution,
+    Exfiltration,
+    Impact,
+    ImpairProcessControl,
+    InhibitResponseFunction,
+    InitialAccess,
+    LateralMovement,
+    Persistence,
+    PreAttack,
+    PrivilegeEscalation,
+    Reconnaissance,
+    ResourceDevelopment,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+struct AlertPropertyMapping {
+    alert_property: AlertProperty,
+    value: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+struct AlertDetailsOverride {
+    alert_description_format: Option<String>,
+    alert_display_name_format: Option<String>,
+    alert_severity_column_name: Option<String>,
+    alert_tactics_column_name: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
@@ -145,10 +167,6 @@ struct IncidentConfiguration {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 #[serde(rename_all = "camelCase")]
-struct AttackTactic {}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-#[serde(rename_all = "camelCase")]
 struct Properties {
     display_name: String,
     enabled: bool,
@@ -159,12 +177,12 @@ struct Properties {
     suppression_duration: String,
     suppression_enabled: bool,
     trigger_operator: TriggerOperator,
-    trigger_threshold: i32,
+    trigger_threshold: i64,
     alert_details_override: Option<AlertDetailsOverride>,
     alert_rule_template_name: Option<String>,
     custom_details: Option<HashMap<String, Value>>,
     description: Option<String>,
-    entity_mappings: Option<EntityMapping>,
+    entity_mappings: Option<Vec<EntityMapping>>,
     event_grouping_settings: Option<EventGroupingSettings>,
     incident_configuration: Option<IncidentConfiguration>,
     tactics: Option<Vec<AttackTactic>>,
@@ -175,7 +193,7 @@ struct Properties {
 #[derive(CustomResource, Clone, Debug, Deserialize, Serialize, PartialEq, JsonSchema)]
 #[kube(
     group = "buildrlabs.io",
-    version = "2024-09-01",
+    version = "v1",
     kind = "MicrosoftSentinelDetectionRule",
     shortname = "msd",
     status = "MicrosoftSentinelDetectionRuleStatus",
