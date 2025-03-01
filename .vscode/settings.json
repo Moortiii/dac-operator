@@ -16,6 +16,7 @@
     "vs-kubernetes.crd-code-completion": "enabled"
   },
   "yaml.schemas": {
-    "kubernetes://schema/buildrlabs.io/v1@microsoftsentineldetectionrule": "detection_rules/microsoft_sentinel"
+    "kubernetes://schema/buildrlabs.io/v1@microsoftsentineldetectionrule": "detection_rules/microsoft_sentinel",
+    "kubernetes://schema/buildrlabs.io/v1@microsoftsentinelautomationrule": "automation_rules"
   }
 }
