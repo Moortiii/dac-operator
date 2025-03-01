@@ -31,7 +31,7 @@ spec:
       jsonPath: .status.create_detection_rule.rule_type
       name: Rule type
       type: string
-    name: 2024-09-01
+    name: v1
     schema:
       openAPIV3Schema:
         description: Auto-generated derived type for MicrosoftSentinelDetectionRuleSpec via `CustomResource`
@@ -74,45 +74,47 @@ spec:
                   enabled:
                     type: boolean
                   entityMappings:
+                    items:
+                      properties:
+                        entityType:
+                          enum:
+                          - Account
+                          - AzureResource
+                          - CloudApplication
+                          - DNS
+                          - File
+                          - FileHash
+                          - Host
+                          - IP
+                          - MailCluster
+                          - MailMessage
+                          - Mailbox
+                          - Malware
+                          - Process
+                          - RegistryKey
+                          - RegistryValue
+                          - SecurityGroup
+                          - SubmissionMail
+                          - URL
+                          type: string
+                        fieldMappings:
+                          items:
+                            properties:
+                              columnName:
+                                type: string
+                              identifier:
+                                type: string
+                            required:
+                            - columnName
+                            - identifier
+                            type: object
+                          type: array
+                      required:
+                      - entityType
+                      - fieldMappings
+                      type: object
                     nullable: true
-                    properties:
-                      entityType:
-                        enum:
-                        - Account
-                        - AzureResource
-                        - CloudApplication
-                        - DNS
-                        - File
-                        - FileHash
-                        - Host
-                        - IP
-                        - MailCluster
-                        - MailMessage
-                        - Mailbox
-                        - Malware
-                        - Process
-                        - RegistryKey
-                        - RegistryValue
-                        - SecurityGroup
-                        - SubmissionMail
-                        - URL
-                        type: string
-                      fieldMappings:
-                        items:
-                          properties:
-                            columnName:
-                              type: string
-                            identifier:
-                              type: string
-                          required:
-                          - columnName
-                          - identifier
-                          type: object
-                        type: array
-                    required:
-                    - entityType
-                    - fieldMappings
-                    type: object
+                    type: array
                   eventGroupingSettings:
                     nullable: true
                     properties:
@@ -219,7 +221,25 @@ spec:
                     type: boolean
                   tactics:
                     items:
-                      type: object
+                      enum:
+                      - Collection
+                      - CommandAndControl
+                      - CredentialAccess
+                      - DefenseEvasion
+                      - Discovery
+                      - Execution
+                      - Exfiltration
+                      - Impact
+                      - ImpairProcessControl
+                      - InhibitResponseFunction
+                      - InitialAccess
+                      - LateralMovement
+                      - Persistence
+                      - PreAttack
+                      - PrivilegeEscalation
+                      - Reconnaissance
+                      - ResourceDevelopment
+                      type: string
                     nullable: true
                     type: array
                   techniques:
@@ -238,7 +258,7 @@ spec:
                     - NotEqual
                     type: string
                   triggerThreshold:
-                    format: int32
+                    format: int64
                     type: integer
                 required:
                 - displayName
