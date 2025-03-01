@@ -3,22 +3,21 @@ kind: MicrosoftSentinelDetectionRule
 metadata:
   name: example-detection-rule-1
 spec:
-  name: Example Rule 1
-  enabled: true
-  description: This is the Detection Rule description
-  query: "Heartbeat"
-  queryPrefix: ""
-  querySuffix: ""
-  queryFrequency: PT1H
-  queryPeriod: P2DT1H30M
-  severity: Informational
-  triggerOperator: Equal
-  suppressionEnabled: false
-  entityMappings:
-    - entityType: Host
-      fieldMappings:
-        - identifier: FullName
-          columnName: Computer
-  eventGroupingSettings:
-    aggregationKind: AlertPerResult
-  
+  properties:
+    displayName: Example Rule 1
+    enabled: true
+    query: Heartbeat
+    queryFrequency: PT1H
+    queryPeriod: PT1H
+    severity: Informational
+    suppressionDuration: PT15H
+    suppressionEnabled: false
+    triggerOperator: GreaterThan
+    triggerThreshold: 0
+    eventGroupingSettings:
+      aggregationKind: AlertPerResult
+    entityMappings:
+      - entityType: Host
+        fieldMappings:
+          - columnName: FullName
+            identifier: Computer

@@ -57,6 +57,7 @@ This isn't usually a problem in production where Detection Rules are relatively 
 - [x] Add support for 'macros' (SPL-equivalent) that can be injected anywhere in a query.
 - [x] Add the option to include a query prefix, and query suffix, e.g. to support basic filter-macros for Tenants.
 - [x] Include a status column on the Detection Rule that describes _why_ it isn't deployed, if that is the case
+- [x] Create a strict CRD manifest that can be used by Kubernetes to validate incoming resources that we want to create (use Kubebuilder or kube-rs and structure as monorepo?)
 - [ ] Fetch MITRE Information in order to showcase how we can perform visualizations across multiple products / tenants
 - [ ] Create converter for Content Hub rules, so that it's easy to export rules and add them to the Detection library.
 - [ ] Add support for automation rules, analytics workbooks etc.
@@ -64,4 +65,3 @@ This isn't usually a problem in production where Detection Rules are relatively 
 - [ ] Store the expiry when authenticating to prevent authenticating again for each Detection Rule to deploy
 - [ ] Make it possible to test Detection Rules prior to deployment
 - [ ] Set up a "staging"-cluster in Kind that can be used to verify changes (different and more easily solvable than automated testing)
-- [ ] Create a strict CRD manifest that can be used by Kubernetes to validate incoming resources that we want to create (use Kubebuilder or kube-rs and structure as monorepo?)
