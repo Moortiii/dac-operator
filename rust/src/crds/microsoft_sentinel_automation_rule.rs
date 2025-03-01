@@ -111,28 +111,36 @@ pub struct AddIncidentTaskActionProperties {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase", tag = "action_type")]
+pub struct ModifyPropertiesAction {
+    action_type: ModifyPropertiesActionType,
+    action_configuration: IncidentPropertiesAction,
+    order: i64,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase", tag = "action_type")]
+pub struct AddIncidentTagAction {
+    action_type: AddIncidentTaskActionType,
+    action_configuration: AddIncidentTaskActionProperties,
+    order: i64,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase", tag = "action_type")]
+pub struct RunPlaybookAction {
+    action_type: RunPlaybookActionType,
+    action_configuration: PlaybookActionProperties,
+    order: i64,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 pub struct TriggeringLogic {}
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 pub enum Action {
-    #[serde(rename_all = "camelCase")]
-    ModifyPropertiesAction {
-        action_type: ModifyPropertiesActionType,
-        action_configuration: IncidentPropertiesAction,
-        order: i64,
-    },
-    #[serde(rename_all = "camelCase")]
-    AddIncidentTagAction {
-        action_type: AddIncidentTaskActionType,
-        action_configuration: AddIncidentTaskActionProperties,
-        order: i64,
-    },
-    #[serde(rename_all = "camelCase")]
-    RunPlaybookAction {
-        action_type: RunPlaybookActionType,
-        action_configuration: PlaybookActionProperties,
-        order: i64,
-    },
+    AddIncidentTagAction(AddIncidentTagAction),
+    RunPlaybookAction(RunPlaybookAction),
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
