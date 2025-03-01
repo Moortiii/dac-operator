@@ -3,29 +3,31 @@ kind: MicrosoftSentinelDetectionRule
 metadata:
   name: example-detection-rule-2
 spec:
-  name: Example Rule 2
-  enabled: true
-  description: This is the Detection Rule description
-  query: |
-    let Threshold = 25;
-    let TimeFrame = 1h;
-    AzureActivity
-    | where OperationNameValue =~ "MICROSOFT.COMPUTE/VIRTUALMACHINES/START/ACTION"
-    | where ActivityStatusValue == "Success"
-    `${example-macro-1}`
-    | extend ResourceName = tostring(parse_json(Properties).resource)
-    | summarize Total = dcount(ResourceName), ResourceNames = make_set(ResourceName) by bin(TimeGenerated, TimeFrame), SubscriptionId, ResourceId
-    | where Total >= Threshold
-  queryFrequency: PT1H
-  queryPeriod: P2DT1H30M
-  severity: High
-  triggerOperator: Equal
-  suppressionEnabled: false
-  entityMappings:
-    - entityType: Host
-      fieldMappings:
-        - identifier: FullName
-          columnName: TimeGenerated
-  eventGroupingSettings:
-    aggregationKind: AlertPerResult
-  
+  properties:
+    displayName: Example Rule 2
+    description: This is the Detection Rule description
+    enabled: true
+    query: |
+      let Threshold = 25;
+      let TimeFrame = 1h;
+      AzureActivity
+      | where OperationNameValue =~ "MICROSOFT.COMPUTE/VIRTUALMACHINES/START/ACTION"
+      | where ActivityStatusValue == "Success"
+      `${example-macro-1}`
+      | extend ResourceName = tostring(parse_json(Properties).resource)
+      | summarize Total = dcount(ResourceName), ResourceNames = make_set(ResourceName) by bin(TimeGenerated, TimeFrame), SubscriptionId, ResourceId
+      | where Total >= Threshold
+    queryFrequency: PT1H
+    queryPeriod: PT1H30M
+    severity: High
+    suppressionDuration: PT1H 
+    suppressionEnabled: false
+    triggerOperator: Equal
+    triggerThreshold: 1
+    eventGroupingSettings:
+      aggregationKind: AlertPerResult
+    entityMappings:
+      - entityType: Host
+        fieldMappings:
+          - columnName: FullName
+            identifier: TimeGenerated
