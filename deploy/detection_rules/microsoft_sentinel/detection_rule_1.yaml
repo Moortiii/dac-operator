@@ -19,5 +19,5 @@ spec:
     entityMappings:
       - entityType: Host
         fieldMappings:
-          - columnName: FullName
-            identifier: Computer
+          - columnName: Computer
+            identifier: HostName
