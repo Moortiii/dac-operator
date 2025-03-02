@@ -30,4 +30,4 @@ spec:
       - entityType: Host
         fieldMappings:
           - columnName: FullName
-            identifier: TimeGenerated
+            identifier: NetBiosName
