@@ -278,19 +278,24 @@ spec:
           status:
             nullable: true
             properties:
-              deployed:
-                type: string
-              enabled:
-                type: string
-              message:
-                type: string
-              rule_type:
-                type: string
+              create_detection_rule:
+                properties:
+                  deployed:
+                    type: string
+                  enabled:
+                    type: string
+                  message:
+                    type: string
+                  rule_type:
+                    type: string
+                required:
+                - deployed
+                - enabled
+                - message
+                - rule_type
+                type: object
             required:
-            - deployed
-            - enabled
-            - message
-            - rule_type
+            - create_detection_rule
             type: object
         required:
         - spec
