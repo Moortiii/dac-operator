@@ -30,15 +30,18 @@ class KubernetesClient:
 
     def get_config_map(self, name: str, namespace: str) -> kubernetes_models.ConfigMap:
         try:
-            configmap = kubernetes_models.ConfigMap.model_validate(
-                self._core_api.read_namespaced_config_map(
-                    name=name, namespace=namespace
-                ),
-                from_attributes=True,
+            configmap = self._core_api.read_namespaced_config_map(
+                name=name, namespace=namespace
             )
         except kubernetes.client.exceptions.ApiException:
-            self._logger.error(f"Config map '{name}' does not exist.")
+            self._logger.error(
+                f"Config map '{name}' does not exist for namespace '{namespace}'."
+            )
             raise kubernetes_exceptions.ResourceNotFoundException
+
+        configmap = kubernetes_models.ConfigMap.model_validate(
+            configmap, from_attributes=True
+        )
 
         return configmap
 
