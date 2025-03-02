@@ -18,7 +18,7 @@ spec:
     entityMappings:
       - entityType: Host
         fieldMappings:
-          - identifier: FullName
-            columnName: Computer
+          - columnName: Computer
+            identifier: FullName
     eventGroupingSettings:
       aggregationKind: AlertPerResult
