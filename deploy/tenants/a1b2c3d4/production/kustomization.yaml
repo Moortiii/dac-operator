@@ -2,7 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../base
-  - ../../macros/a1b2c3d4
   - configmap.yaml
 patches:
   - target:
@@ -10,10 +9,4 @@ patches:
       version: v1
       kind: MicrosoftSentinelDetectionRule
       name: example-detection-rule-1
-    path: ./patches/disable_detection_rule.yaml
-  - target:
-      group: buildrlabs.io
-      version: v1
-      kind: MicrosoftSentinelDetectionRule
-      name: example-detection-rule-1
-    path: ../../../common_patches/detection_rule_1_update_query_suffix.yaml
+    path: ../../../common_patches/disable_detection_rule.yaml
