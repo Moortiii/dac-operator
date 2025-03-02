@@ -43,8 +43,12 @@ async def create_detection_rule(spec, **kwargs):
         status.message = ErrorMessages.initialization_error.value
         return status.model_dump()
 
+    properties = spec.get("properties", {})
+
+    # TODO: Make it possible for the service to return a result so that we can
+    # move this logic further down the stack
     # Inject main query
-    query = spec.get("query", "")
+    query = properties.get("query", "")
     result = await microsoft_sentinel_service.inject_macros(
         query=query, rule_name=rule_name
     )
@@ -56,7 +60,7 @@ async def create_detection_rule(spec, **kwargs):
     query = result.query
 
     # Inject macros into query prefix
-    query_prefix = spec.get("queryPrefix", "")
+    query_prefix = properties.get("queryPrefix", "")
     result = await microsoft_sentinel_service.inject_macros(
         query=query_prefix, rule_name=rule_name
     )
@@ -68,7 +72,7 @@ async def create_detection_rule(spec, **kwargs):
     query_prefix = result.query
 
     # Inject macros into query suffix
-    query_suffix = spec.get("querySuffix", "")
+    query_suffix = properties.get("querySuffix", "")
     result = await microsoft_sentinel_service.inject_macros(
         query=query_suffix, rule_name=rule_name
     )
@@ -81,32 +85,9 @@ async def create_detection_rule(spec, **kwargs):
 
     try:
         await microsoft_sentinel_service.create_or_update_analytics_rule(
-            rule_name=kwargs["name"],
-            payload=microsoft_sentinel_models.CreateScheduledAlertRule(
-                properties=microsoft_sentinel_models.ScheduledAlertRuleProperties(  # type: ignore
-                    displayName=spec["name"],
-                    enabled=spec.get("enabled", True),
-                    description=spec.get("description", ""),
-                    query=query,
-                    query_prefix=query_prefix,  # type: ignore
-                    query_suffix=query_suffix,  # type: ignore
-                    query_frequency=spec.get("queryFrequency", "PT1H"),  # type: ignore
-                    query_period=spec.get("queryPeriod", "PT1H"),  # type: ignore
-                    severity=spec.get("severity", "Informational"),
-                    custom_details=spec.get("customDetails", {}),  # type: ignore
-                    suppression_duration=spec.get("suppressionDuration", "PT1H"),  # type: ignore
-                    suppression_enabled=spec.get("suppressionEnabled", False),  # type: ignore
-                    alert_details_override=spec.get("alertDetailsOverride"),  # type: ignore
-                    tactics=spec.get("tactics", []),
-                    techniques=spec.get("techniques", []),
-                    alert_rule_template_name=spec.get("alertRuleTemplateName"),  # type: ignore
-                    event_grouping_settings=spec.get("eventGroupingSettings"),  # type: ignore
-                    incident_configuration=spec.get("incidentConfiguration"),  # type: ignore
-                    entity_mappings=spec.get("entityMappings", []),  # type: ignore
-                    template_version=spec.get("templateVersion"),  # type: ignore
-                    trigger_threshold=spec.get("triggerThreshold", 1),  # type: ignore
-                    trigger_operator=spec.get("triggerOperator", "GreaterThan"),  # type: ignore
-                ),
+            rule_name=rule_name,
+            payload=microsoft_sentinel_models.CreateScheduledAlertRule.model_validate(
+                **spec
             ),
         )
     except Exception:
@@ -115,7 +96,7 @@ async def create_detection_rule(spec, **kwargs):
 
     analytics_rule_status = await microsoft_sentinel_service.analytics_rule_status(
         analytic_rule_id=microsoft_sentinel_service._compute_analytics_rule_id(
-            rule_name=kwargs["name"]
+            rule_name=rule_name
         )
     )
     status.rule_type = analytics_rule_status.rule_type
