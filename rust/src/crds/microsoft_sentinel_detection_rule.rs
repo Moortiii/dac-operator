@@ -212,11 +212,16 @@ struct MicrosoftSentinelDetectionRuleSpec {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-struct MicrosoftSentinelDetectionRuleStatus {
+struct CreateDetectionRuleStatusProperties {
     message: String,
     deployed: String,
     enabled: String,
     rule_type: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+struct MicrosoftSentinelDetectionRuleStatus {
+    create_detection_rule: CreateDetectionRuleStatusProperties,
 }
 
 pub fn write_crd() -> std::io::Result<()> {
