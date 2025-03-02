@@ -19,19 +19,12 @@ struct ExampleStruct {}
     version = "v1",
     kind = "MicrosoftSentinelMacro",
     shortname = "msmacro",
-    status = "MicrosoftSentinelMacroStatus",
     shortname = "msmacros",
-    printcolumn = r#"{"name":"Message", "type":"string", "description":"Additional information about the deployment status", "jsonPath":".status.create_detection_rule.message"}"#,
     namespaced
 )]
 #[serde(rename_all = "camelCase")]
 struct MicrosoftSentinelMacroSpec {
     content: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-struct MicrosoftSentinelMacroStatus {
-    message: String,
 }
 
 pub fn write_crd() -> std::io::Result<()> {
