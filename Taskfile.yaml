@@ -1,0 +1,14 @@
+version: 3
+
+tasks:
+  controller-up:
+    dir: ./python
+    cmd: uv run kopf run dac_operator/entrypoint.py
+  
+  build-crd:
+    dir: ./rust
+    cmd: cargo run
+  
+  apply-crd:
+    dir: ./rust
+    cmd: kubectl apply -f generated/
