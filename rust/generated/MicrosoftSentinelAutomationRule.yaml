@@ -62,9 +62,38 @@ spec:
             oneOf:
             - required:
               - BooleanCondition
+            - required:
+              - PropertyArrayChanged
             properties:
               BooleanCondition:
                 $ref: '#/components/schemas/BooleanConditionProperties'
+              PropertyArrayChanged:
+                properties:
+                  conditionProperties:
+                    properties:
+                      array_type:
+                        enum:
+                        - Alerts
+                        - Comments
+                        - Labels
+                        - Tactics
+                        type: string
+                      change_type:
+                        enum:
+                        - Added
+                        type: string
+                    required:
+                    - array_type
+                    - change_type
+                    type: object
+                  conditionType:
+                    enum:
+                    - Property Array Changed
+                    type: string
+                required:
+                - conditionProperties
+                - conditionType
+                type: object
             type: object
         description: Auto-generated derived type for MicrosoftSentinelAutomationRuleSpec via `CustomResource`
         properties:
@@ -142,6 +171,8 @@ spec:
                           oneOf:
                           - required:
                             - BooleanCondition
+                          - required:
+                            - PropertyArrayChanged
                           properties:
                             BooleanCondition:
                               properties:
@@ -163,6 +194,33 @@ spec:
                                 conditionType:
                                   enum:
                                   - Boolean
+                                  type: string
+                              required:
+                              - conditionProperties
+                              - conditionType
+                              type: object
+                            PropertyArrayChanged:
+                              properties:
+                                conditionProperties:
+                                  properties:
+                                    array_type:
+                                      enum:
+                                      - Alerts
+                                      - Comments
+                                      - Labels
+                                      - Tactics
+                                      type: string
+                                    change_type:
+                                      enum:
+                                      - Added
+                                      type: string
+                                  required:
+                                  - array_type
+                                  - change_type
+                                  type: object
+                                conditionType:
+                                  enum:
+                                  - Property Array Changed
                                   type: string
                               required:
                               - conditionProperties
