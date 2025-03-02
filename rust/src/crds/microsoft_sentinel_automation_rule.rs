@@ -143,15 +143,6 @@ pub struct ArrayChangedConditionProperties {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 #[serde(rename_all = "camelCase")]
-pub struct ClientInfo {
-    email: String,
-    name: String,
-    object_id: String,
-    user_principal_name: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-#[serde(rename_all = "camelCase")]
 pub struct IncidentOwnerInfo {
     assigned_to: String,
     email: String,
@@ -219,7 +210,7 @@ pub struct RunPlaybookAction {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 pub struct TriggeringLogic {
-    conditions: Vec<Condition>,
+    // conditions: Vec<Condition>,
     expiration_time_utc: String,
     is_enabled: bool,
     triggers_on: TriggersOn,
