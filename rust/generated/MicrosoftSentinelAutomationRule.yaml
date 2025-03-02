@@ -30,6 +30,42 @@ spec:
     name: v1
     schema:
       openAPIV3Schema:
+        definitions:
+          BooleanCondition:
+            properties:
+              inner_conditions:
+                items:
+                  $ref: '#/components/schemas/Condition'
+                type: array
+              operator:
+                enum:
+                - And
+                - Or
+                type: string
+            required:
+            - inner_conditions
+            - operator
+            type: object
+          BooleanConditionProperties:
+            properties:
+              conditionProperties:
+                $ref: '#/components/schemas/BooleanCondition'
+              conditionType:
+                enum:
+                - Boolean
+                type: string
+            required:
+            - conditionProperties
+            - conditionType
+            type: object
+          Condition:
+            oneOf:
+            - required:
+              - BooleanCondition
+            properties:
+              BooleanCondition:
+                $ref: '#/components/schemas/BooleanConditionProperties'
+            type: object
         description: Auto-generated derived type for MicrosoftSentinelAutomationRuleSpec via `CustomResource`
         properties:
           spec:
@@ -100,6 +136,60 @@ spec:
                     format: int64
                     type: integer
                   triggeringLogic:
+                    properties:
+                      conditions:
+                        items:
+                          oneOf:
+                          - required:
+                            - BooleanCondition
+                          properties:
+                            BooleanCondition:
+                              properties:
+                                conditionProperties:
+                                  properties:
+                                    inner_conditions:
+                                      items:
+                                        $ref: '#/components/schemas/Condition'
+                                      type: array
+                                    operator:
+                                      enum:
+                                      - And
+                                      - Or
+                                      type: string
+                                  required:
+                                  - inner_conditions
+                                  - operator
+                                  type: object
+                                conditionType:
+                                  enum:
+                                  - Boolean
+                                  type: string
+                              required:
+                              - conditionProperties
+                              - conditionType
+                              type: object
+                          type: object
+                        type: array
+                      expiration_time_utc:
+                        type: string
+                      is_enabled:
+                        type: boolean
+                      triggers_on:
+                        enum:
+                        - Incident
+                        - Alerts
+                        type: string
+                      triggers_when:
+                        enum:
+                        - Created
+                        - Updated
+                        type: string
+                    required:
+                    - conditions
+                    - expiration_time_utc
+                    - is_enabled
+                    - triggers_on
+                    - triggers_when
                     type: object
                 required:
                 - actions
