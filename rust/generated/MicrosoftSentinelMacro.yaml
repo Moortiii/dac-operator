@@ -14,11 +14,7 @@ spec:
     singular: microsoftsentinelmacro
   scope: Namespaced
   versions:
-  - additionalPrinterColumns:
-    - description: Additional information about the deployment status
-      jsonPath: .status.create_detection_rule.message
-      name: Message
-      type: string
+  - additionalPrinterColumns: []
     name: v1
     schema:
       openAPIV3Schema:
@@ -31,19 +27,10 @@ spec:
             required:
             - content
             type: object
-          status:
-            nullable: true
-            properties:
-              message:
-                type: string
-            required:
-            - message
-            type: object
         required:
         - spec
         title: MicrosoftSentinelMacro
         type: object
     served: true
     storage: true
-    subresources:
-      status: {}
+    subresources: {}

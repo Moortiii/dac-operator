@@ -30,71 +30,6 @@ spec:
     name: v1
     schema:
       openAPIV3Schema:
-        definitions:
-          BooleanCondition:
-            properties:
-              inner_conditions:
-                items:
-                  $ref: '#/components/schemas/Condition'
-                type: array
-              operator:
-                enum:
-                - And
-                - Or
-                type: string
-            required:
-            - inner_conditions
-            - operator
-            type: object
-          BooleanConditionProperties:
-            properties:
-              conditionProperties:
-                $ref: '#/components/schemas/BooleanCondition'
-              conditionType:
-                enum:
-                - Boolean
-                type: string
-            required:
-            - conditionProperties
-            - conditionType
-            type: object
-          Condition:
-            oneOf:
-            - required:
-              - BooleanCondition
-            - required:
-              - PropertyArrayChanged
-            properties:
-              BooleanCondition:
-                $ref: '#/components/schemas/BooleanConditionProperties'
-              PropertyArrayChanged:
-                properties:
-                  conditionProperties:
-                    properties:
-                      array_type:
-                        enum:
-                        - Alerts
-                        - Comments
-                        - Labels
-                        - Tactics
-                        type: string
-                      change_type:
-                        enum:
-                        - Added
-                        type: string
-                    required:
-                    - array_type
-                    - change_type
-                    type: object
-                  conditionType:
-                    enum:
-                    - Property Array Changed
-                    type: string
-                required:
-                - conditionProperties
-                - conditionType
-                type: object
-            type: object
         description: Auto-generated derived type for MicrosoftSentinelAutomationRuleSpec via `CustomResource`
         properties:
           spec:
@@ -166,68 +101,6 @@ spec:
                     type: integer
                   triggeringLogic:
                     properties:
-                      conditions:
-                        items:
-                          oneOf:
-                          - required:
-                            - BooleanCondition
-                          - required:
-                            - PropertyArrayChanged
-                          properties:
-                            BooleanCondition:
-                              properties:
-                                conditionProperties:
-                                  properties:
-                                    inner_conditions:
-                                      items:
-                                        $ref: '#/components/schemas/Condition'
-                                      type: array
-                                    operator:
-                                      enum:
-                                      - And
-                                      - Or
-                                      type: string
-                                  required:
-                                  - inner_conditions
-                                  - operator
-                                  type: object
-                                conditionType:
-                                  enum:
-                                  - Boolean
-                                  type: string
-                              required:
-                              - conditionProperties
-                              - conditionType
-                              type: object
-                            PropertyArrayChanged:
-                              properties:
-                                conditionProperties:
-                                  properties:
-                                    array_type:
-                                      enum:
-                                      - Alerts
-                                      - Comments
-                                      - Labels
-                                      - Tactics
-                                      type: string
-                                    change_type:
-                                      enum:
-                                      - Added
-                                      type: string
-                                  required:
-                                  - array_type
-                                  - change_type
-                                  type: object
-                                conditionType:
-                                  enum:
-                                  - Property Array Changed
-                                  type: string
-                              required:
-                              - conditionProperties
-                              - conditionType
-                              type: object
-                          type: object
-                        type: array
                       expiration_time_utc:
                         type: string
                       is_enabled:
@@ -243,7 +116,6 @@ spec:
                         - Updated
                         type: string
                     required:
-                    - conditions
                     - expiration_time_utc
                     - is_enabled
                     - triggers_on
