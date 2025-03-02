@@ -29,5 +29,5 @@ spec:
     entityMappings:
       - entityType: Host
         fieldMappings:
-          - columnName: ActorName
-            identifier: NetBiosName
+          - columnName: TimeGenerated
+            identifier: FullName
