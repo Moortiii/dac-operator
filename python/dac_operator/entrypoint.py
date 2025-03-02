@@ -3,13 +3,24 @@ from typing import Literal
 
 import kopf
 from kubernetes import client
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from dac_operator import providers
 from dac_operator.microsoft_sentinel import (
     microsoft_sentinel_exceptions,
     microsoft_sentinel_models,
 )
+
+ALLOWED_NAMESPACES = [
+    "a1b2c3d4",
+    "ce06ce71",
+]
+
+ALLOWED_RULE_NAMES = [
+    "example-detection-rule-1",
+    "example-detection-rule-2",
+    "example-detection-rule-3",
+]
 
 
 class ErrorMessages(StrEnum):
@@ -31,6 +42,10 @@ async def create_detection_rule(spec, **kwargs):
     namespace = kwargs["namespace"]
     rule_name = kwargs["name"]
 
+    if rule_name not in ALLOWED_RULE_NAMES or namespace not in ALLOWED_NAMESPACES:
+        print(f"Skipping {rule_name} for {namespace}")
+        return
+
     try:
         microsoft_sentinel_service = providers.get_microsoft_sentinel_service(
             kubernetes_client=providers.get_kubernetes_client(
@@ -43,52 +58,55 @@ async def create_detection_rule(spec, **kwargs):
         status.message = ErrorMessages.initialization_error.value
         return status.model_dump()
 
+    try:
+        payload = microsoft_sentinel_models.CreateScheduledAlertRule.model_validate(
+            spec
+        )
+    except ValidationError as err:
+        status.message = str(err)
+        return status.model_dump()
+
     properties = spec.get("properties", {})
 
     # TODO: Make it possible for the service to return a result so that we can
     # move this logic further down the stack
     # Inject main query
-    query = properties.get("query", "")
     result = await microsoft_sentinel_service.inject_macros(
-        query=query, rule_name=rule_name
+        query=properties.get("query", ""), rule_name=rule_name
     )
 
     if not result.success:
         status.message = result.message
         return status.model_dump()
 
-    query = result.query
+    payload.properties.query = result.query
 
     # Inject macros into query prefix
-    query_prefix = properties.get("queryPrefix", "")
     result = await microsoft_sentinel_service.inject_macros(
-        query=query_prefix, rule_name=rule_name
+        query=properties.get("queryPrefix", ""), rule_name=rule_name
     )
 
     if not result.success:
         status.message = result.message
         return status.model_dump()
 
-    query_prefix = result.query
+    payload.properties.query_prefix = result.query
 
     # Inject macros into query suffix
-    query_suffix = properties.get("querySuffix", "")
     result = await microsoft_sentinel_service.inject_macros(
-        query=query_suffix, rule_name=rule_name
+        query=properties.get("querySuffix", ""), rule_name=rule_name
     )
 
     if not result.success:
         status.message = result.message
         return status.model_dump()
 
-    query_suffix = result.query
+    payload.properties.query_suffix = result.query
 
     try:
         await microsoft_sentinel_service.create_or_update_analytics_rule(
             rule_name=rule_name,
-            payload=microsoft_sentinel_models.CreateScheduledAlertRule.model_validate(
-                **spec
-            ),
+            payload=payload,
         )
     except Exception:
         status.message = ErrorMessages.create_error

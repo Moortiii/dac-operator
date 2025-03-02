@@ -77,7 +77,9 @@ class AnalyticsRuleStatus(BaseModel):
 
 
 class BaseModelWithConfig(BaseModel):
-    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+    model_config = ConfigDict(
+        from_attributes=True, populate_by_name=True, extra="allow"
+    )
 
 
 class GroupingConfiguration(BaseModelWithConfig):
@@ -143,8 +145,8 @@ class ScheduledAlertRuleProperties(BaseModelWithConfig):
         None, alias="alertDetailsOverride"
     )
     alert_rule_template_name: str | None = Field(None, alias="alertRuleTemplateName")
-    custom_details: dict[str, str] = Field(..., alias="customDetails")
-    description: str
+    custom_details: dict[str, str] | None = Field(None, alias="customDetails")
+    description: str | None = None
     entity_mappings: list[EntityMapping] = Field([], alias="entityMappings")
     event_grouping_settings: EventGroupingSettings | None = Field(
         None, alias="eventGroupingSettings"
