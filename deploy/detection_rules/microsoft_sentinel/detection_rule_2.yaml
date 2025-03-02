@@ -29,5 +29,5 @@ spec:
     entityMappings:
       - entityType: Host
         fieldMappings:
-          - columnName: Computer
+          - columnName: ActorName
             identifier: NetBiosName
