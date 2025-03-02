@@ -50,6 +50,18 @@ pub enum IncidentClassificationReason {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum TriggersOn {
+    Incident,
+    Alerts,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum TriggersWhen {
+    Created,
+    Updated,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 pub enum RunPlaybookActionType {
     #[serde(rename = "Run Playbook")]
     RunPlaybook,
@@ -65,6 +77,77 @@ pub enum ModifyPropertiesActionType {
 pub enum AddIncidentTaskActionType {
     #[serde(rename = "Add Incident Task")]
     AddIncidentTask,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum BooleanConditionType {
+    Boolean,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum PropertyArrayChangedConditionType {
+    #[serde(rename = "Property Array Changed")]
+    PropertyArrayChanged,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum BooleanConditionSupportedOperator {
+    And,
+    Or,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum PropertyArrayChangedConditionSupportedArrayType {
+    Alerts,
+    Comments,
+    Labels,
+    Tactics,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum PropertyArrayChangedConditionSupportedChangeType {
+    Added,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum Condition {
+    BooleanCondition(BooleanConditionProperties),
+    PropertyArrayChanged(ArrayChangedConditionProperties),
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub struct BooleanCondition {
+    operator: BooleanConditionSupportedOperator,
+    inner_conditions: Vec<Condition>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub struct PropertyArrayChangedValuesCondition {
+    array_type: PropertyArrayChangedConditionSupportedArrayType,
+    change_type: PropertyArrayChangedConditionSupportedChangeType,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct BooleanConditionProperties {
+    condition_type: BooleanConditionType,
+    condition_properties: BooleanCondition,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct ArrayChangedConditionProperties {
+    condition_type: PropertyArrayChangedConditionType,
+    condition_properties: PropertyArrayChangedValuesCondition,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct ClientInfo {
+    email: String,
+    name: String,
+    object_id: String,
+    user_principal_name: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
@@ -135,7 +218,13 @@ pub struct RunPlaybookAction {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-pub struct TriggeringLogic {}
+pub struct TriggeringLogic {
+    conditions: Vec<Condition>,
+    expiration_time_utc: String,
+    is_enabled: bool,
+    triggers_on: TriggersOn,
+    triggers_when: TriggersWhen,
+}
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 pub enum Action {
