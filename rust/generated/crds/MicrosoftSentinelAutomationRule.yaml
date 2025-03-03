@@ -101,6 +101,41 @@ spec:
                     type: integer
                   triggeringLogic:
                     properties:
+                      conditions:
+                        items:
+                          oneOf:
+                          - required:
+                            - PropertyArrayChanged
+                          properties:
+                            PropertyArrayChanged:
+                              properties:
+                                conditionProperties:
+                                  properties:
+                                    array_type:
+                                      enum:
+                                      - Alerts
+                                      - Comments
+                                      - Labels
+                                      - Tactics
+                                      type: string
+                                    change_type:
+                                      enum:
+                                      - Added
+                                      type: string
+                                  required:
+                                  - array_type
+                                  - change_type
+                                  type: object
+                                conditionType:
+                                  enum:
+                                  - Property Array Changed
+                                  type: string
+                              required:
+                              - conditionProperties
+                              - conditionType
+                              type: object
+                          type: object
+                        type: array
                       expiration_time_utc:
                         type: string
                       is_enabled:
@@ -116,6 +151,7 @@ spec:
                         - Updated
                         type: string
                     required:
+                    - conditions
                     - expiration_time_utc
                     - is_enabled
                     - triggers_on
