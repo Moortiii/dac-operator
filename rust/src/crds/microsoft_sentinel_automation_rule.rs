@@ -1,6 +1,6 @@
 use kube::core::CustomResourceExt;
 use kube_derive::CustomResource;
-use schemars::JsonSchema;
+use schemars::{schema_for, JsonSchema};
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::Write;
@@ -111,7 +111,7 @@ pub enum PropertyArrayChangedConditionSupportedChangeType {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 pub enum Condition {
-    BooleanCondition(BooleanConditionProperties),
+    // BooleanCondition(BooleanConditionProperties),
     PropertyArrayChanged(ArrayChangedConditionProperties),
 }
 
@@ -128,14 +128,14 @@ pub struct PropertyArrayChangedValuesCondition {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", tag = "condition_type")]
 pub struct BooleanConditionProperties {
     condition_type: BooleanConditionType,
     condition_properties: BooleanCondition,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", tag = "condition_type")]
 pub struct ArrayChangedConditionProperties {
     condition_type: PropertyArrayChangedConditionType,
     condition_properties: PropertyArrayChangedValuesCondition,
@@ -210,7 +210,7 @@ pub struct RunPlaybookAction {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 pub struct TriggeringLogic {
-    // conditions: Vec<Condition>,
+    conditions: Vec<Condition>,
     expiration_time_utc: String,
     is_enabled: bool,
     triggers_on: TriggersOn,
@@ -261,8 +261,17 @@ pub fn write_crd() -> std::io::Result<()> {
     // Write MicrosoftSentinelAutomationRule CRD
     let filename = "MicrosoftSentinelAutomationRule";
     let crd_yaml = serde_yaml::to_string(&MicrosoftSentinelAutomationRule::crd()).unwrap();
-    let mut file = File::create(format!("./generated/{}.yaml", filename)).unwrap();
+    let mut file = File::create(format!("./generated/crds/{}.yaml", filename)).unwrap();
     file.write_all(crd_yaml.as_bytes()).unwrap();
-    println!("{filename} written to {filename}.yaml");
+    println!("{filename} CRD-schema written to {filename}.json");
+
+    // Write MicrosoftSentinelAutomationRule Jsonschema
+    let filename = "MicrosoftSentinelAutomationRule";
+    let schema = schema_for!(MicrosoftSentinelAutomationRuleSpec);
+    let crd_json = serde_json::to_string_pretty(&schema).unwrap();
+    let mut file = File::create(format!("./generated/jsonschema/{}.json", filename)).unwrap();
+    file.write_all(crd_json.as_bytes()).unwrap();
+    println!("{filename} JSON-schema written to {filename}.json");
+
     Ok(())
 }

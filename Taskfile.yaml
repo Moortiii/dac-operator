@@ -11,4 +11,9 @@ tasks:
   
   apply-crd:
     dir: ./rust
-    cmd: kubectl apply -f generated/
+    cmd: kubectl apply -f generated/crds/
+
+  build:
+    cmds:
+      - task: build-crd
+      - task: apply-crd

@@ -1,0 +1,263 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MicrosoftSentinelAutomationRuleSpec",
+  "type": "object",
+  "required": [
+    "properties"
+  ],
+  "properties": {
+    "properties": {
+      "$ref": "#/definitions/Properties"
+    }
+  },
+  "definitions": {
+    "Action": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "AddIncidentTagAction"
+          ],
+          "properties": {
+            "AddIncidentTagAction": {
+              "$ref": "#/definitions/AddIncidentTagAction"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "RunPlaybookAction"
+          ],
+          "properties": {
+            "RunPlaybookAction": {
+              "$ref": "#/definitions/RunPlaybookAction"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "AddIncidentTagAction": {
+      "type": "object",
+      "required": [
+        "actionConfiguration",
+        "actionType",
+        "order"
+      ],
+      "properties": {
+        "actionConfiguration": {
+          "$ref": "#/definitions/AddIncidentTaskActionProperties"
+        },
+        "actionType": {
+          "$ref": "#/definitions/AddIncidentTaskActionType"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "AddIncidentTaskActionProperties": {
+      "type": "object",
+      "required": [
+        "description",
+        "title"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "AddIncidentTaskActionType": {
+      "type": "string",
+      "enum": [
+        "Add Incident Task"
+      ]
+    },
+    "ArrayChangedConditionProperties": {
+      "type": "object",
+      "required": [
+        "conditionProperties",
+        "conditionType"
+      ],
+      "properties": {
+        "conditionProperties": {
+          "$ref": "#/definitions/PropertyArrayChangedValuesCondition"
+        },
+        "conditionType": {
+          "$ref": "#/definitions/PropertyArrayChangedConditionType"
+        }
+      }
+    },
+    "Condition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "PropertyArrayChanged"
+          ],
+          "properties": {
+            "PropertyArrayChanged": {
+              "$ref": "#/definitions/ArrayChangedConditionProperties"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "PlaybookActionProperties": {
+      "type": "object",
+      "required": [
+        "logicAppResourceId",
+        "tenantId"
+      ],
+      "properties": {
+        "logicAppResourceId": {
+          "type": "string"
+        },
+        "tenantId": {
+          "type": "string"
+        }
+      }
+    },
+    "Properties": {
+      "type": "object",
+      "required": [
+        "actions",
+        "displayName",
+        "order",
+        "triggeringLogic"
+      ],
+      "properties": {
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "triggeringLogic": {
+          "$ref": "#/definitions/TriggeringLogic"
+        }
+      }
+    },
+    "PropertyArrayChangedConditionSupportedArrayType": {
+      "type": "string",
+      "enum": [
+        "Alerts",
+        "Comments",
+        "Labels",
+        "Tactics"
+      ]
+    },
+    "PropertyArrayChangedConditionSupportedChangeType": {
+      "type": "string",
+      "enum": [
+        "Added"
+      ]
+    },
+    "PropertyArrayChangedConditionType": {
+      "type": "string",
+      "enum": [
+        "Property Array Changed"
+      ]
+    },
+    "PropertyArrayChangedValuesCondition": {
+      "type": "object",
+      "required": [
+        "array_type",
+        "change_type"
+      ],
+      "properties": {
+        "array_type": {
+          "$ref": "#/definitions/PropertyArrayChangedConditionSupportedArrayType"
+        },
+        "change_type": {
+          "$ref": "#/definitions/PropertyArrayChangedConditionSupportedChangeType"
+        }
+      }
+    },
+    "RunPlaybookAction": {
+      "type": "object",
+      "required": [
+        "actionConfiguration",
+        "actionType",
+        "order"
+      ],
+      "properties": {
+        "actionConfiguration": {
+          "$ref": "#/definitions/PlaybookActionProperties"
+        },
+        "actionType": {
+          "$ref": "#/definitions/RunPlaybookActionType"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "RunPlaybookActionType": {
+      "type": "string",
+      "enum": [
+        "Run Playbook"
+      ]
+    },
+    "TriggeringLogic": {
+      "type": "object",
+      "required": [
+        "conditions",
+        "expiration_time_utc",
+        "is_enabled",
+        "triggers_on",
+        "triggers_when"
+      ],
+      "properties": {
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          }
+        },
+        "expiration_time_utc": {
+          "type": "string"
+        },
+        "is_enabled": {
+          "type": "boolean"
+        },
+        "triggers_on": {
+          "$ref": "#/definitions/TriggersOn"
+        },
+        "triggers_when": {
+          "$ref": "#/definitions/TriggersWhen"
+        }
+      }
+    },
+    "TriggersOn": {
+      "type": "string",
+      "enum": [
+        "Incident",
+        "Alerts"
+      ]
+    },
+    "TriggersWhen": {
+      "type": "string",
+      "enum": [
+        "Created",
+        "Updated"
+      ]
+    }
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MicrosoftSentinelDetectionRuleSpec",
+  "type": "object",
+  "required": [
+    "properties"
+  ],
+  "properties": {
+    "kind": {
+      "default": "Scheduled",
+      "type": "string"
+    },
+    "properties": {
+      "$ref": "#/definitions/Properties"
+    }
+  },
+  "definitions": {
+    "AggregationKind": {
+      "type": "string",
+      "enum": [
+        "AlertPerResult",
+        "SingleAlert"
+      ]
+    },
+    "AlertDetail": {
+      "type": "object",
+      "required": [
+        "displayName",
+        "severity"
+      ],
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/definitions/Severity"
+        }
+      }
+    },
+    "AlertDetailsOverride": {
+      "type": "object",
+      "properties": {
+        "alertDescriptionFormat": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "alertDisplayNameFormat": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "alertSeverityColumnName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "alertTacticsColumnName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "AttackTactic": {
+      "type": "string",
+      "enum": [
+        "Collection",
+        "CommandAndControl",
+        "CredentialAccess",
+        "DefenseEvasion",
+        "Discovery",
+        "Execution",
+        "Exfiltration",
+        "Impact",
+        "ImpairProcessControl",
+        "InhibitResponseFunction",
+        "InitialAccess",
+        "LateralMovement",
+        "Persistence",
+        "PreAttack",
+        "PrivilegeEscalation",
+        "Reconnaissance",
+        "ResourceDevelopment"
+      ]
+    },
+    "EntityMapping": {
+      "type": "object",
+      "required": [
+        "entityType",
+        "fieldMappings"
+      ],
+      "properties": {
+        "entityType": {
+          "$ref": "#/definitions/EntityType"
+        },
+        "fieldMappings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldMapping"
+          }
+        }
+      }
+    },
+    "EntityType": {
+      "type": "string",
+      "enum": [
+        "Account",
+        "AzureResource",
+        "CloudApplication",
+        "DNS",
+        "File",
+        "FileHash",
+        "Host",
+        "IP",
+        "MailCluster",
+        "MailMessage",
+        "Mailbox",
+        "Malware",
+        "Process",
+        "RegistryKey",
+        "RegistryValue",
+        "SecurityGroup",
+        "SubmissionMail",
+        "URL"
+      ]
+    },
+    "EventGroupingSettings": {
+      "type": "object",
+      "required": [
+        "aggregationKind"
+      ],
+      "properties": {
+        "aggregationKind": {
+          "$ref": "#/definitions/AggregationKind"
+        }
+      }
+    },
+    "FieldMapping": {
+      "type": "object",
+      "required": [
+        "columnName",
+        "identifier"
+      ],
+      "properties": {
+        "columnName": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        }
+      }
+    },
+    "GroupingConfiguration": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "groupByAlertDetails",
+        "groupByCustomDetails",
+        "groupByEntities",
+        "lookbackDuration",
+        "matchingMethod",
+        "reopenClosedIncident"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "groupByAlertDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AlertDetail"
+          }
+        },
+        "groupByCustomDetails": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "groupByEntities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntityType"
+          }
+        },
+        "lookbackDuration": {
+          "type": "string"
+        },
+        "matchingMethod": {
+          "$ref": "#/definitions/MatchingMethod"
+        },
+        "reopenClosedIncident": {
+          "type": "boolean"
+        }
+      }
+    },
+    "IncidentConfiguration": {
+      "type": "object",
+      "required": [
+        "createIncident",
+        "groupingConfiguration"
+      ],
+      "properties": {
+        "createIncident": {
+          "type": "boolean"
+        },
+        "groupingConfiguration": {
+          "$ref": "#/definitions/GroupingConfiguration"
+        }
+      }
+    },
+    "MatchingMethod": {
+      "type": "string",
+      "enum": [
+        "AllEntities",
+        "AnyAlert",
+        "Selected"
+      ]
+    },
+    "Properties": {
+      "type": "object",
+      "required": [
+        "displayName",
+        "enabled",
+        "query",
+        "queryFrequency",
+        "queryPeriod",
+        "severity",
+        "suppressionDuration",
+        "suppressionEnabled",
+        "triggerOperator",
+        "triggerThreshold"
+      ],
+      "properties": {
+        "alertDetailsOverride": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AlertDetailsOverride"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "alertRuleTemplateName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "customDetails": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": true
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "entityMappings": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/EntityMapping"
+          }
+        },
+        "eventGroupingSettings": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/EventGroupingSettings"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "incidentConfiguration": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncidentConfiguration"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "query": {
+          "type": "string"
+        },
+        "queryFrequency": {
+          "type": "string"
+        },
+        "queryPeriod": {
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/definitions/Severity"
+        },
+        "suppressionDuration": {
+          "type": "string"
+        },
+        "suppressionEnabled": {
+          "type": "boolean"
+        },
+        "tactics": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/AttackTactic"
+          }
+        },
+        "techniques": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "templateVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "triggerOperator": {
+          "$ref": "#/definitions/TriggerOperator"
+        },
+        "triggerThreshold": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Severity": {
+      "type": "string",
+      "enum": [
+        "High",
+        "Informational",
+        "Low",
+        "Medium"
+      ]
+    },
+    "TriggerOperator": {
+      "type": "string",
+      "enum": [
+        "Equal",
+        "GreaterThan",
+        "LessThan",
+        "NotEqual"
+      ]
+    }
+  }
+}
