@@ -110,18 +110,27 @@ pub enum PropertyArrayChangedConditionSupportedChangeType {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(tag = "conditionType", rename_all = "camelCase")]
 pub enum Condition {
-    // BooleanCondition(BooleanConditionProperties),
-    PropertyArrayChanged(ArrayChangedConditionProperties),
+    #[serde(rename = "Boolean", rename_all = "camelCase")]
+    BooleanCondition {
+        condition_properties: BooleanCondition,
+    },
+    #[serde(rename = "Property Array Changed", rename_all = "camelCase")]
+    PropertyArrayChanged {
+        condition_properties: PropertyArrayChangedValuesCondition,
+    },
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct BooleanCondition {
     operator: BooleanConditionSupportedOperator,
     inner_conditions: Vec<Condition>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct PropertyArrayChangedValuesCondition {
     array_type: PropertyArrayChangedConditionSupportedArrayType,
     change_type: PropertyArrayChangedConditionSupportedChangeType,
@@ -209,6 +218,7 @@ pub struct RunPlaybookAction {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
 pub struct TriggeringLogic {
     conditions: Vec<Condition>,
     expiration_time_utc: String,
@@ -259,11 +269,11 @@ struct MicrosoftSentinelAutomationRuleStatus {
 
 pub fn write_crd() -> std::io::Result<()> {
     // Write MicrosoftSentinelAutomationRule CRD
-    let filename = "MicrosoftSentinelAutomationRule";
-    let crd_yaml = serde_yaml::to_string(&MicrosoftSentinelAutomationRule::crd()).unwrap();
-    let mut file = File::create(format!("./generated/crds/{}.yaml", filename)).unwrap();
-    file.write_all(crd_yaml.as_bytes()).unwrap();
-    println!("{filename} CRD-schema written to {filename}.json");
+    // let filename = "MicrosoftSentinelAutomationRule";
+    // let crd_yaml = serde_yaml::to_string(&MicrosoftSentinelAutomationRule::crd()).unwrap();
+    // let mut file = File::create(format!("./generated/crds/{}.yaml", filename)).unwrap();
+    // file.write_all(crd_yaml.as_bytes()).unwrap();
+    // println!("{filename} CRD-schema written to {filename}.json");
 
     // Write MicrosoftSentinelAutomationRule Jsonschema
     let filename = "MicrosoftSentinelAutomationRule";

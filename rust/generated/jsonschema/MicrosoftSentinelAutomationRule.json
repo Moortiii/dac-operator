@@ -80,34 +80,68 @@
         "Add Incident Task"
       ]
     },
-    "ArrayChangedConditionProperties": {
+    "BooleanCondition": {
       "type": "object",
       "required": [
-        "conditionProperties",
-        "conditionType"
+        "innerConditions",
+        "operator"
       ],
       "properties": {
-        "conditionProperties": {
-          "$ref": "#/definitions/PropertyArrayChangedValuesCondition"
+        "innerConditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          }
         },
-        "conditionType": {
-          "$ref": "#/definitions/PropertyArrayChangedConditionType"
+        "operator": {
+          "$ref": "#/definitions/BooleanConditionSupportedOperator"
         }
       }
+    },
+    "BooleanConditionSupportedOperator": {
+      "type": "string",
+      "enum": [
+        "And",
+        "Or"
+      ]
     },
     "Condition": {
       "oneOf": [
         {
           "type": "object",
           "required": [
-            "PropertyArrayChanged"
+            "conditionProperties",
+            "conditionType"
           ],
           "properties": {
-            "PropertyArrayChanged": {
-              "$ref": "#/definitions/ArrayChangedConditionProperties"
+            "conditionProperties": {
+              "$ref": "#/definitions/BooleanCondition"
+            },
+            "conditionType": {
+              "type": "string",
+              "enum": [
+                "Boolean"
+              ]
             }
-          },
-          "additionalProperties": false
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "conditionProperties",
+            "conditionType"
+          ],
+          "properties": {
+            "conditionProperties": {
+              "$ref": "#/definitions/PropertyArrayChangedValuesCondition"
+            },
+            "conditionType": {
+              "type": "string",
+              "enum": [
+                "Property Array Changed"
+              ]
+            }
+          }
         }
       ]
     },
@@ -168,23 +202,17 @@
         "Added"
       ]
     },
-    "PropertyArrayChangedConditionType": {
-      "type": "string",
-      "enum": [
-        "Property Array Changed"
-      ]
-    },
     "PropertyArrayChangedValuesCondition": {
       "type": "object",
       "required": [
-        "array_type",
-        "change_type"
+        "arrayType",
+        "changeType"
       ],
       "properties": {
-        "array_type": {
+        "arrayType": {
           "$ref": "#/definitions/PropertyArrayChangedConditionSupportedArrayType"
         },
-        "change_type": {
+        "changeType": {
           "$ref": "#/definitions/PropertyArrayChangedConditionSupportedChangeType"
         }
       }
@@ -219,10 +247,10 @@
       "type": "object",
       "required": [
         "conditions",
-        "expiration_time_utc",
-        "is_enabled",
-        "triggers_on",
-        "triggers_when"
+        "expirationTimeUtc",
+        "isEnabled",
+        "triggersOn",
+        "triggersWhen"
       ],
       "properties": {
         "conditions": {
@@ -231,16 +259,16 @@
             "$ref": "#/definitions/Condition"
           }
         },
-        "expiration_time_utc": {
+        "expirationTimeUtc": {
           "type": "string"
         },
-        "is_enabled": {
+        "isEnabled": {
           "type": "boolean"
         },
-        "triggers_on": {
+        "triggersOn": {
           "$ref": "#/definitions/TriggersOn"
         },
-        "triggers_when": {
+        "triggersWhen": {
           "$ref": "#/definitions/TriggersWhen"
         }
       }
