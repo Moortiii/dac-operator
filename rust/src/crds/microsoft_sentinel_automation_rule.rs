@@ -386,7 +386,7 @@ struct Metadata {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 #[serde(rename_all = "camelCase")]
-struct CRDWrapper {
+struct MicrosoftSentinelAutomationRuleCRD {
     kind: CRDName,
     spec: MicrosoftSentinelAutomationRuleSpec,
     api_version: APIVersion,
@@ -436,7 +436,7 @@ pub fn write_crd() -> std::io::Result<()> {
 
     // Write MicrosoftSentinelAutomationRule CRD JSON-schema
     let filename = "MicrosoftSentinelAutomationRuleCRD";
-    let schema = schema_for!(CRDWrapper);
+    let schema = schema_for!(MicrosoftSentinelAutomationRuleCRD);
     let crd_json = serde_json::to_string_pretty(&schema).unwrap();
     let mut file = File::create(format!("./generated/jsonschema/{}.json", filename)).unwrap();
     file.write_all(crd_json.as_bytes()).unwrap();
