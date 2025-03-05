@@ -52,7 +52,7 @@ pub enum IncidentClassificationReason {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 pub enum TriggersOn {
-    Incident,
+    Incidents,
     Alerts,
 }
 
@@ -60,35 +60,6 @@ pub enum TriggersOn {
 pub enum TriggersWhen {
     Created,
     Updated,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-pub enum RunPlaybookActionType {
-    #[serde(rename = "Run Playbook")]
-    RunPlaybook,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-pub enum ModifyPropertiesActionType {
-    #[serde(rename = "Modify Properties")]
-    ModifyProperties,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-pub enum AddIncidentTaskActionType {
-    #[serde(rename = "Add Incident Task")]
-    AddIncidentTask,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-pub enum BooleanConditionType {
-    Boolean,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-pub enum PropertyArrayChangedConditionType {
-    #[serde(rename = "Property Array Changed")]
-    PropertyArrayChanged,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
@@ -190,11 +161,11 @@ pub enum Condition {
     BooleanCondition {
         condition_properties: BooleanCondition,
     },
-    #[serde(rename = "Property Array Changed", rename_all = "camelCase")]
+    #[serde(rename = "PropertyArrayChanged", rename_all = "camelCase")]
     PropertyArrayChangedCondition {
         condition_properties: PropertyArrayChangedCondition,
     },
-    #[serde(rename = "Property Changed", rename_all = "camelCase")]
+    #[serde(rename = "PropertyChanged", rename_all = "camelCase")]
     PropertyChangedCondition {
         condition_properties: PropertyChangedCondition,
     },
@@ -286,19 +257,19 @@ pub struct IncidentOwnerInfo {
 #[serde(rename_all = "camelCase")]
 pub struct IncidentLabel {
     label_name: String,
-    label_type: LabelType,
+    label_type: Option<LabelType>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct IncidentPropertiesActionProperties {
-    classification: IncidentClassification,
-    classification_comment: String,
-    classification_reason: IncidentClassificationReason,
-    labels: Vec<IncidentLabel>,
-    owner: IncidentOwnerInfo,
-    severity: IncidentSeverity,
-    status: IncidentStatus,
+    classification: Option<IncidentClassification>,
+    classification_comment: Option<String>,
+    classification_reason: Option<IncidentClassificationReason>,
+    labels: Option<Vec<IncidentLabel>>,
+    owner: Option<IncidentOwnerInfo>,
+    severity: Option<IncidentSeverity>,
+    status: Option<IncidentStatus>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
@@ -328,17 +299,17 @@ pub struct TriggeringLogic {
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 #[serde(tag = "actionType", rename_all = "camelCase")]
 pub enum Action {
-    #[serde(rename = "Add Incident Task", rename_all = "camelCase")]
+    #[serde(rename = "AddIncidentTask", rename_all = "camelCase")]
     AddIncidentTagAction {
         action_configuration: AddIncidentTaskActionProperties,
         order: i64,
     },
-    #[serde(rename = "Run Playbook", rename_all = "camelCase")]
+    #[serde(rename = "RunPlaybook", rename_all = "camelCase")]
     RunPlaybookAction {
         action_configuration: PlaybookActionProperties,
         order: i64,
     },
-    #[serde(rename = "Modify Properties", rename_all = "camelCase")]
+    #[serde(rename = "ModifyProperties", rename_all = "camelCase")]
     ModifyPropertiesAction {
         action_configuration: IncidentPropertiesActionProperties,
         order: i64,

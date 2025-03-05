@@ -27,7 +27,7 @@
             "actionType": {
               "type": "string",
               "enum": [
-                "Add Incident Task"
+                "AddIncidentTask"
               ]
             },
             "order": {
@@ -50,7 +50,7 @@
             "actionType": {
               "type": "string",
               "enum": [
-                "Run Playbook"
+                "RunPlaybook"
               ]
             },
             "order": {
@@ -73,7 +73,7 @@
             "actionType": {
               "type": "string",
               "enum": [
-                "Modify Properties"
+                "ModifyProperties"
               ]
             },
             "order": {
@@ -164,7 +164,7 @@
             "conditionType": {
               "type": "string",
               "enum": [
-                "Property Array Changed"
+                "PropertyArrayChanged"
               ]
             }
           }
@@ -182,7 +182,7 @@
             "conditionType": {
               "type": "string",
               "enum": [
-                "Property Changed"
+                "PropertyChanged"
               ]
             }
           }
@@ -246,15 +246,21 @@
     "IncidentLabel": {
       "type": "object",
       "required": [
-        "labelName",
-        "labelType"
+        "labelName"
       ],
       "properties": {
         "labelName": {
           "type": "string"
         },
         "labelType": {
-          "$ref": "#/definitions/LabelType"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LabelType"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -287,39 +293,71 @@
     },
     "IncidentPropertiesActionProperties": {
       "type": "object",
-      "required": [
-        "classification",
-        "classificationComment",
-        "classificationReason",
-        "labels",
-        "owner",
-        "severity",
-        "status"
-      ],
       "properties": {
         "classification": {
-          "$ref": "#/definitions/IncidentClassification"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncidentClassification"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "classificationComment": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "classificationReason": {
-          "$ref": "#/definitions/IncidentClassificationReason"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncidentClassificationReason"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "labels": {
-          "type": "array",
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
             "$ref": "#/definitions/IncidentLabel"
           }
         },
         "owner": {
-          "$ref": "#/definitions/IncidentOwnerInfo"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncidentOwnerInfo"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "severity": {
-          "$ref": "#/definitions/IncidentSeverity"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncidentSeverity"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "status": {
-          "$ref": "#/definitions/IncidentStatus"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncidentStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -627,7 +665,7 @@
     "TriggersOn": {
       "type": "string",
       "enum": [
-        "Incident",
+        "Incidents",
         "Alerts"
       ]
     },
