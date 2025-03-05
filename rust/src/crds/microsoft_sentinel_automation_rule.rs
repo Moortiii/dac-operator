@@ -291,7 +291,7 @@ pub struct IncidentLabel {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 #[serde(rename_all = "camelCase")]
-pub struct IncidentPropertiesAction {
+pub struct IncidentPropertiesActionProperties {
     classification: IncidentClassification,
     classification_comment: String,
     classification_reason: IncidentClassificationReason,
@@ -316,30 +316,6 @@ pub struct AddIncidentTaskActionProperties {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-#[serde(rename_all = "camelCase", tag = "action_type")]
-pub struct ModifyPropertiesAction {
-    action_type: ModifyPropertiesActionType,
-    action_configuration: IncidentPropertiesAction,
-    order: i64,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-#[serde(rename_all = "camelCase", tag = "action_type")]
-pub struct AddIncidentTagAction {
-    action_type: AddIncidentTaskActionType,
-    action_configuration: AddIncidentTaskActionProperties,
-    order: i64,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-#[serde(rename_all = "camelCase", tag = "action_type")]
-pub struct RunPlaybookAction {
-    action_type: RunPlaybookActionType,
-    action_configuration: PlaybookActionProperties,
-    order: i64,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TriggeringLogic {
     conditions: Vec<Condition>,
@@ -350,9 +326,23 @@ pub struct TriggeringLogic {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(tag = "actionType", rename_all = "camelCase")]
 pub enum Action {
-    AddIncidentTagAction(AddIncidentTagAction),
-    RunPlaybookAction(RunPlaybookAction),
+    #[serde(rename = "Add Incident Task", rename_all = "camelCase")]
+    AddIncidentTagAction {
+        action_configuration: AddIncidentTaskActionProperties,
+        order: i64,
+    },
+    #[serde(rename = "Run Playbook", rename_all = "camelCase")]
+    RunPlaybookAction {
+        action_configuration: PlaybookActionProperties,
+        order: i64,
+    },
+    #[serde(rename = "Modify Properties", rename_all = "camelCase")]
+    ModifyPropertiesAction {
+        action_configuration: IncidentPropertiesActionProperties,
+        order: i64,
+    },
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]

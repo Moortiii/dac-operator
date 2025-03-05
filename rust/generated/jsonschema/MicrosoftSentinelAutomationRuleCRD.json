@@ -34,48 +34,73 @@
         {
           "type": "object",
           "required": [
-            "AddIncidentTagAction"
+            "actionConfiguration",
+            "actionType",
+            "order"
           ],
           "properties": {
-            "AddIncidentTagAction": {
-              "$ref": "#/definitions/AddIncidentTagAction"
+            "actionConfiguration": {
+              "$ref": "#/definitions/AddIncidentTaskActionProperties"
+            },
+            "actionType": {
+              "type": "string",
+              "enum": [
+                "Add Incident Task"
+              ]
+            },
+            "order": {
+              "type": "integer",
+              "format": "int64"
             }
-          },
-          "additionalProperties": false
+          }
         },
         {
           "type": "object",
           "required": [
-            "RunPlaybookAction"
+            "actionConfiguration",
+            "actionType",
+            "order"
           ],
           "properties": {
-            "RunPlaybookAction": {
-              "$ref": "#/definitions/RunPlaybookAction"
+            "actionConfiguration": {
+              "$ref": "#/definitions/PlaybookActionProperties"
+            },
+            "actionType": {
+              "type": "string",
+              "enum": [
+                "Run Playbook"
+              ]
+            },
+            "order": {
+              "type": "integer",
+              "format": "int64"
             }
-          },
-          "additionalProperties": false
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "actionConfiguration",
+            "actionType",
+            "order"
+          ],
+          "properties": {
+            "actionConfiguration": {
+              "$ref": "#/definitions/IncidentPropertiesActionProperties"
+            },
+            "actionType": {
+              "type": "string",
+              "enum": [
+                "Modify Properties"
+              ]
+            },
+            "order": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
         }
       ]
-    },
-    "AddIncidentTagAction": {
-      "type": "object",
-      "required": [
-        "actionConfiguration",
-        "actionType",
-        "order"
-      ],
-      "properties": {
-        "actionConfiguration": {
-          "$ref": "#/definitions/AddIncidentTaskActionProperties"
-        },
-        "actionType": {
-          "$ref": "#/definitions/AddIncidentTaskActionType"
-        },
-        "order": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
     },
     "AddIncidentTaskActionProperties": {
       "type": "object",
@@ -91,12 +116,6 @@
           "type": "string"
         }
       }
-    },
-    "AddIncidentTaskActionType": {
-      "type": "string",
-      "enum": [
-        "Add Incident Task"
-      ]
     },
     "ArrayConditionSupportedArrayType": {
       "type": "string",
@@ -230,6 +249,128 @@
         }
       ]
     },
+    "IncidentClassification": {
+      "type": "string",
+      "enum": [
+        "BenignPositive",
+        "FalsePositive",
+        "TruePositive",
+        "Undetermined"
+      ]
+    },
+    "IncidentClassificationReason": {
+      "type": "string",
+      "enum": [
+        "InaccurateData",
+        "IncorrectAlertLogic",
+        "SuspiciousActivity",
+        "SuspiciousButExpected"
+      ]
+    },
+    "IncidentLabel": {
+      "type": "object",
+      "required": [
+        "labelName",
+        "labelType"
+      ],
+      "properties": {
+        "labelName": {
+          "type": "string"
+        },
+        "labelType": {
+          "$ref": "#/definitions/LabelType"
+        }
+      }
+    },
+    "IncidentOwnerInfo": {
+      "type": "object",
+      "required": [
+        "assignedTo",
+        "email",
+        "objectId",
+        "ownerType",
+        "userPrincipalName"
+      ],
+      "properties": {
+        "assignedTo": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "objectId": {
+          "type": "string"
+        },
+        "ownerType": {
+          "$ref": "#/definitions/OwnerType"
+        },
+        "userPrincipalName": {
+          "type": "string"
+        }
+      }
+    },
+    "IncidentPropertiesActionProperties": {
+      "type": "object",
+      "required": [
+        "classification",
+        "classificationComment",
+        "classificationReason",
+        "labels",
+        "owner",
+        "severity",
+        "status"
+      ],
+      "properties": {
+        "classification": {
+          "$ref": "#/definitions/IncidentClassification"
+        },
+        "classificationComment": {
+          "type": "string"
+        },
+        "classificationReason": {
+          "$ref": "#/definitions/IncidentClassificationReason"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IncidentLabel"
+          }
+        },
+        "owner": {
+          "$ref": "#/definitions/IncidentOwnerInfo"
+        },
+        "severity": {
+          "$ref": "#/definitions/IncidentSeverity"
+        },
+        "status": {
+          "$ref": "#/definitions/IncidentStatus"
+        }
+      }
+    },
+    "IncidentSeverity": {
+      "type": "string",
+      "enum": [
+        "High",
+        "Medium",
+        "Low",
+        "Informational"
+      ]
+    },
+    "IncidentStatus": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Closed",
+        "New"
+      ]
+    },
+    "LabelType": {
+      "type": "string",
+      "enum": [
+        "AutoAssigned",
+        "User"
+      ]
+    },
     "Metadata": {
       "type": "object",
       "required": [
@@ -257,6 +398,14 @@
           "$ref": "#/definitions/Properties"
         }
       }
+    },
+    "OwnerType": {
+      "type": "string",
+      "enum": [
+        "Group",
+        "Unknown",
+        "User"
+      ]
     },
     "PlaybookActionProperties": {
       "type": "object",
@@ -495,32 +644,6 @@
         "RegistryKey",
         "RegistryValueData",
         "Url"
-      ]
-    },
-    "RunPlaybookAction": {
-      "type": "object",
-      "required": [
-        "actionConfiguration",
-        "actionType",
-        "order"
-      ],
-      "properties": {
-        "actionConfiguration": {
-          "$ref": "#/definitions/PlaybookActionProperties"
-        },
-        "actionType": {
-          "$ref": "#/definitions/RunPlaybookActionType"
-        },
-        "order": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "RunPlaybookActionType": {
-      "type": "string",
-      "enum": [
-        "Run Playbook"
       ]
     },
     "TriggeringLogic": {
