@@ -1,0 +1,49 @@
+apiVersion: buildrlabs.io/v1
+kind: MicrosoftSentinelAutomationRule
+metadata:
+  name: incident-tag-automation-1
+spec:
+  properties:
+    displayName: Example Incident tag automation
+    order: 1
+    triggeringLogic:
+      expirationTimeUtc: "2030-01-01T13:00:00Z"
+      isEnabled: true
+      triggersOn: Incidents
+      triggersWhen: Created
+      conditions:
+        - conditionType: Boolean
+          conditionProperties:
+            operator: Or
+            innerConditions:
+              - conditionType: Boolean
+                conditionProperties:
+                  operator: And
+                  innerConditions:
+                    - conditionType: Property
+                      conditionProperties:
+                        propertyName: AlertProductNames
+                        operator: Contains
+                        propertyValues:
+                          - Microsoft 365 Defender
+                          - Azure Advanced Threat Protection
+                    - conditionType: Property
+                      conditionProperties:
+                        propertyName: IncidentTitle
+                        operator: NotStartsWith
+                        propertyValues:
+                          - Quarantine alert
+                          - Email reported by user as malware or phish
+                          - Email reported by user as junk
+              - conditionType: Property
+                conditionProperties:
+                  propertyName: IncidentTitle
+                  operator: StartsWith
+                  propertyValues:
+                    - '[BuildrLabs]'
+    actions:
+      - order: 1
+        actionType: ModifyProperties
+        actionConfiguration:
+          labels:
+            - labelName: This label was added by an automation rule
