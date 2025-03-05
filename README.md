@@ -47,22 +47,32 @@ There is a built-in delay in Microsoft when deleting and re-creating Detection R
 
 This isn't usually a problem in production where Detection Rules are relatively static, and instead are toggled as enabled / disabled.
 
+## Highlights:
+
+- ✅ Supports per-customer configuration for Sentinel Microsoft Workspace information
+
+- ✅ Custom Admission Controller that validates resource creation requests against API Schema
+
+- ✅ Per-resource status information in `kubectl`, `k9s` or similar tooling
+
+- ✅ Custom object support, e.g. `MicrosoftSentinelMacro` to support use-cases that are not provided by the SIEM
+
+- ✅ Support for Microsoft Sentinel Analytic Rules
+
+- ✅ Support for Microsoft Sentinel Automation Rules
+
 #### TODO:
 
-- [x] Fetch information about which workspace to use etc. in the kopf-controller from the customer configmap
-- [x] Include a status column on the Detection Rule that indicates if it is deployed upstream or not
-- [x] Include a status column on the Detection Rule that indicates if it is enabled upstream or not
-- [x] If PUT request when creating Detection Rules fails for any reason, show this reason in the status column
-- [x] If one or more referenced macros don't exist, make sure to reflect this in the status and deploy column
-- [x] Add support for 'macros' (SPL-equivalent) that can be injected anywhere in a query.
-- [x] Add the option to include a query prefix, and query suffix, e.g. to support basic filter-macros for Tenants.
-- [x] Include a status column on the Detection Rule that describes _why_ it isn't deployed, if that is the case
-- [x] Create a strict CRD manifest that can be used by Kubernetes to validate incoming resources that we want to create (use Kubebuilder or kube-rs and structure as monorepo?)
-- [ ] Add SOPS encryption of secrets to ensure they are stored as Kubernetes secrets in the cluster
-- [ ] Create converter for Content Hub rules, so that it's easy to export rules and add them to the Detection library.
-- [x] Add support for automation rules
-- [ ] Add support for analytics workbooks
-- [ ] Consider support for fetching third-party rules (e.g. those added via Content Hub, marking them as 'external' but generating Kubernetes resources for them)
-- [ ] Make it possible to test Detection Rules prior to deployment
-- [ ] Set up a "staging"-cluster in Kind that can be used to verify changes (different and more easily solvable than automated testing)
-- [ ] Fetch MITRE Information in order to showcase how we can perform visualizations across multiple products / tenants
+- [ ] Store sensitive operator configuration as Kubernetes Secrets, use SOPS-encryption for storing them in Git.
+
+- [ ] Create converter for Content Hub rules. It should be siple to import existing rules into the Detection library.
+
+- [ ] Add support for [Microsoft Sentinel Workbooks](https://learn.microsoft.com/en-us/azure/sentinel/monitor-your-data)
+
+- [ ] Ingest externally sourced Analytic rules from Microsoft Sentinel, such as those installed from ContentHub.
+
+- [ ] Facilitate automated testing of Detection Rules
+
+- [ ] Make it possible to verify changes before deploying to the live environment. Use a separate subscription to showcase this.
+
+- [ ] Fetch MITRE Information from Detection rules to showcase how we can perform visualizations across multiple products / tenants using the Kubernetes API
