@@ -2,6 +2,7 @@ use kube::core::CustomResourceExt;
 use kube_derive::CustomResource;
 use schemars::{schema_for, JsonSchema};
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::Write;
 
@@ -110,6 +111,79 @@ pub enum PropertyArrayChangedConditionSupportedChangeType {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum ArrayConditionSupportedArrayType {
+    CustomDetailValues,
+    CustomDetails,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum PropertyArrayConditionSupportedArrayConditionType {
+    AnyItem,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum PropertyConditionSupportedProperty {
+    AccountAadTenantId,
+    AccountAadUserId,
+    AccountNTDomain,
+    AccountName,
+    AccountObjectGuid,
+    AccountPUID,
+    AccountSid,
+    AccountUPNSuffix,
+    AlertAnalyticRuleIds,
+    AlertProductNames,
+    AzureResourceResourceId,
+    AzureResourceSubscriptionId,
+    CloudApplicationAppId,
+    CloudApplicationAppName,
+    DNSDomainName,
+    FileDirectory,
+    FileHashValue,
+    FileName,
+    HostAzureID,
+    HostNTDomain,
+    HostName,
+    HostNetBiosName,
+    HostOSVersion,
+    IPAddress,
+    IncidentCustomDetailsKey,
+    IncidentCustomDetailsValue,
+    IncidentDescription,
+    IncidentLabel,
+    IncidentProviderName,
+    IncidentRelatedAnalyticRuleIds,
+    IncidentSeverity,
+    IncidentStatus,
+    IncidentTactics,
+    IncidentTitle,
+    IncidentUpdatedBySource,
+    IoTDeviceId,
+    IoTDeviceModel,
+    IoTDeviceName,
+    IoTDeviceOperatingSystem,
+    IoTDeviceType,
+    IoTDeviceVendor,
+    MailMessageDeliveryAction,
+    MailMessageDeliveryLocation,
+    MailMessageP1Sender,
+    MailMessageP2Sender,
+    MailMessageRecipient,
+    MailMessageSenderIP,
+    MailMessageSubject,
+    MailboxDisplayName,
+    MailboxPrimaryAddress,
+    MailboxUPN,
+    MalwareCategory,
+    MalwareName,
+    ProcessCommandLine,
+    ProcessId,
+    RegistryKey,
+    RegistryValueData,
+    Url,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 #[serde(tag = "conditionType", rename_all = "camelCase")]
 pub enum Condition {
     #[serde(rename = "Boolean", rename_all = "camelCase")]
@@ -117,9 +191,37 @@ pub enum Condition {
         condition_properties: BooleanCondition,
     },
     #[serde(rename = "Property Array Changed", rename_all = "camelCase")]
-    PropertyArrayChanged {
-        condition_properties: PropertyArrayChangedValuesCondition,
+    PropertyArrayChangedCondition {
+        condition_properties: PropertyArrayChangedCondition,
     },
+    #[serde(rename = "Property Changed", rename_all = "camelCase")]
+    PropertyChangedCondition {
+        condition_properties: PropertyChangedCondition,
+    },
+    #[serde(rename = "PropertyArray", rename_all = "camelCase")]
+    PropertyArrayCondition {
+        condition_properties: PropertyArrayValuesCondition,
+    },
+    #[serde(rename = "Property", rename_all = "camelCase")]
+    PropertyCondition {
+        condition_properties: PropertyCondition,
+    },
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct PropertyCondition {
+    operator: PropertyConditionSupportedOperator,
+    property_name: PropertyConditionSupportedProperty,
+    property_values: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct PropertyArrayValuesCondition {
+    array_condition_type: PropertyArrayConditionSupportedArrayConditionType,
+    array_type: ArrayConditionSupportedArrayType,
+    item_conditions: Vec<Condition>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
@@ -131,23 +233,43 @@ pub struct BooleanCondition {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 #[serde(rename_all = "camelCase")]
-pub struct PropertyArrayChangedValuesCondition {
+pub struct PropertyArrayChangedCondition {
     array_type: PropertyArrayChangedConditionSupportedArrayType,
     change_type: PropertyArrayChangedConditionSupportedChangeType,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-#[serde(rename_all = "camelCase", tag = "condition_type")]
-pub struct BooleanConditionProperties {
-    condition_type: BooleanConditionType,
-    condition_properties: BooleanCondition,
+pub enum PropertyChangedConditionSupportedChangedType {
+    ChangedFrom,
+    ChangedTo,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-#[serde(rename_all = "camelCase", tag = "condition_type")]
-pub struct ArrayChangedConditionProperties {
-    condition_type: PropertyArrayChangedConditionType,
-    condition_properties: PropertyArrayChangedValuesCondition,
+pub enum PropertyConditionSupportedOperator {
+    Contains,
+    EndsWith,
+    Equals,
+    NotContains,
+    NotEndsWith,
+    NotEquals,
+    NotStartsWith,
+    StartsWith,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+pub enum PropertyChangedConditionSupportedPropertyType {
+    IncidentOwner,
+    IncidentSeverity,
+    IncidentStatus,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct PropertyChangedCondition {
+    change_type: PropertyChangedConditionSupportedChangedType,
+    propery_name: PropertyChangedConditionSupportedPropertyType,
+    operator: PropertyConditionSupportedOperator,
+    property_values: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
@@ -242,6 +364,35 @@ struct Properties {
     triggering_logic: TriggeringLogic,
 }
 
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+enum CRDName {
+    MicrosoftSentinelAutomationRule,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+enum APIVersion {
+    #[serde(rename = "buildrlabs.io/v1")]
+    BuildrLabs,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+struct Metadata {
+    name: String,
+    namespace: Option<String>,
+    #[serde(flatten)]
+    additional_properties: HashMap<String, String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+struct CRDWrapper {
+    kind: CRDName,
+    spec: MicrosoftSentinelAutomationRuleSpec,
+    api_version: APIVersion,
+    metadata: Metadata,
+}
+
 #[derive(CustomResource, Clone, Debug, Deserialize, Serialize, PartialEq, JsonSchema)]
 #[kube(
     group = "buildrlabs.io",
@@ -275,7 +426,7 @@ pub fn write_crd() -> std::io::Result<()> {
     // file.write_all(crd_yaml.as_bytes()).unwrap();
     // println!("{filename} CRD-schema written to {filename}.json");
 
-    // Write MicrosoftSentinelAutomationRule Jsonschema
+    // Write MicrosoftSentinelAutomationRule validation JSON-schema
     let filename = "MicrosoftSentinelAutomationRule";
     let schema = schema_for!(MicrosoftSentinelAutomationRuleSpec);
     let crd_json = serde_json::to_string_pretty(&schema).unwrap();
@@ -283,5 +434,12 @@ pub fn write_crd() -> std::io::Result<()> {
     file.write_all(crd_json.as_bytes()).unwrap();
     println!("{filename} JSON-schema written to {filename}.json");
 
+    // Write MicrosoftSentinelAutomationRule CRD JSON-schema
+    let filename = "MicrosoftSentinelAutomationRuleCRD";
+    let schema = schema_for!(CRDWrapper);
+    let crd_json = serde_json::to_string_pretty(&schema).unwrap();
+    let mut file = File::create(format!("./generated/jsonschema/{}.json", filename)).unwrap();
+    file.write_all(crd_json.as_bytes()).unwrap();
+    println!("{filename} JSON-schema written to {filename}.json");
     Ok(())
 }
