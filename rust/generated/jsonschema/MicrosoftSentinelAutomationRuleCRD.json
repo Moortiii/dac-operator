@@ -1,16 +1,34 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "MicrosoftSentinelAutomationRuleSpec",
+  "title": "CRDWrapper",
   "type": "object",
   "required": [
-    "properties"
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
   ],
   "properties": {
-    "properties": {
-      "$ref": "#/definitions/Properties"
+    "apiVersion": {
+      "$ref": "#/definitions/APIVersion"
+    },
+    "kind": {
+      "$ref": "#/definitions/CRDName"
+    },
+    "metadata": {
+      "$ref": "#/definitions/Metadata"
+    },
+    "spec": {
+      "$ref": "#/definitions/MicrosoftSentinelAutomationRuleSpec"
     }
   },
   "definitions": {
+    "APIVersion": {
+      "type": "string",
+      "enum": [
+        "buildrlabs.io/v1"
+      ]
+    },
     "Action": {
       "oneOf": [
         {
@@ -112,6 +130,12 @@
         "Or"
       ]
     },
+    "CRDName": {
+      "type": "string",
+      "enum": [
+        "MicrosoftSentinelAutomationRule"
+      ]
+    },
     "Condition": {
       "oneOf": [
         {
@@ -205,6 +229,34 @@
           }
         }
       ]
+    },
+    "Metadata": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "MicrosoftSentinelAutomationRuleSpec": {
+      "type": "object",
+      "required": [
+        "properties"
+      ],
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/Properties"
+        }
+      }
     },
     "PlaybookActionProperties": {
       "type": "object",
