@@ -3,15 +3,24 @@ version: 3
 tasks:
   controller-up:
     dir: ./python
-    cmd: uv run kopf run dac_operator/entrypoint.py
+    cmd: uv run kopf run dac_operator/operator.py
+
+  validator-up:
+    dir: ./python
+    cmd: uv run kopf run dac_operator/admission_controller.py
   
   build-crd:
     dir: ./rust
     cmd: cargo run
+
+  k8s-context:
+    cmd: kubectl set-context minikube
   
   apply-crd:
     dir: ./rust
-    cmd: kubectl apply -f generated/crds/
+    cmds:
+      - task: k8s-context
+      - kubectl apply -f generated/crds/
 
   build:
     cmds:
