@@ -28,7 +28,7 @@ By using a deploy key, we can avoid bootstrapping Flux with a Github PAT, which 
 
     ```bash
     # Set the correct context
-    kubectl config use-context kind-kind
+    kubectl config use-context minikube
 
     # Perform the bootstrap process
     flux bootstrap git \
