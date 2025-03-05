@@ -137,7 +137,7 @@ class MicrosoftSentinelRepository:
                     self._logger.info("An unknown 409 error occured.")
             else:
                 self._logger.exception(
-                    f"An error occured while creating Analytics rule: {err.response.text}"  # noqa: E501
+                    f"An error occured while creating Automation rule: {err.response.text}"  # noqa: E501
                 )
                 raise err from None
 
