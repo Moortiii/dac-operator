@@ -59,10 +59,10 @@ This isn't usually a problem in production where Detection Rules are relatively 
 - [x] Include a status column on the Detection Rule that describes _why_ it isn't deployed, if that is the case
 - [x] Create a strict CRD manifest that can be used by Kubernetes to validate incoming resources that we want to create (use Kubebuilder or kube-rs and structure as monorepo?)
 - [ ] Add SOPS encryption of secrets to ensure they are stored as Kubernetes secrets in the cluster
-- [ ] Fetch MITRE Information in order to showcase how we can perform visualizations across multiple products / tenants
 - [ ] Create converter for Content Hub rules, so that it's easy to export rules and add them to the Detection library.
-- [ ] Add support for automation rules, analytics workbooks etc.
+- [x] Add support for automation rules
+- [ ] Add support for analytics workbooks
 - [ ] Consider support for fetching third-party rules (e.g. those added via Content Hub, marking them as 'external' but generating Kubernetes resources for them)
-- [ ] Store the expiry when authenticating to prevent authenticating again for each Detection Rule to deploy
 - [ ] Make it possible to test Detection Rules prior to deployment
 - [ ] Set up a "staging"-cluster in Kind that can be used to verify changes (different and more easily solvable than automated testing)
+- [ ] Fetch MITRE Information in order to showcase how we can perform visualizations across multiple products / tenants
