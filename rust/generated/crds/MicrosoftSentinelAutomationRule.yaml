@@ -3,188 +3,26 @@ kind: CustomResourceDefinition
 metadata:
   name: microsoftsentinelautomationrules.buildrlabs.io
 spec:
+  scope: Namespaced
   group: buildrlabs.io
   names:
-    categories: []
     kind: MicrosoftSentinelAutomationRule
     plural: microsoftsentinelautomationrules
-    shortNames:
-    - msar
-    - msars
     singular: microsoftsentinelautomationrule
-  scope: Namespaced
+    shortNames:
+      - msars
+      - msar
   versions:
-  - additionalPrinterColumns:
-    - description: Checks if the Automation Rule is deployed to Microsoft Sentinel
-      jsonPath: .status.create_automation_rule.deployed
-      name: Status
-      type: string
-    - description: Checks if the Automation Rule is enabled in Microsoft Sentinel
-      jsonPath: .status.create_automation_rule.enabled
-      name: Enabled
-      type: string
-    - description: Additional information about the deployment status
-      jsonPath: .status.create_automation_rule.message
-      name: Message
-      type: string
-    name: v1
-    schema:
-      openAPIV3Schema:
-        description: Auto-generated derived type for MicrosoftSentinelAutomationRuleSpec via `CustomResource`
-        properties:
-          spec:
-            properties:
-              properties:
-                properties:
-                  actions:
-                    items:
-                      oneOf:
-                      - required:
-                        - AddIncidentTagAction
-                      - required:
-                        - RunPlaybookAction
-                      properties:
-                        AddIncidentTagAction:
-                          properties:
-                            actionConfiguration:
-                              properties:
-                                description:
-                                  type: string
-                                title:
-                                  type: string
-                              required:
-                              - description
-                              - title
-                              type: object
-                            actionType:
-                              enum:
-                              - Add Incident Task
-                              type: string
-                            order:
-                              format: int64
-                              type: integer
-                          required:
-                          - actionConfiguration
-                          - actionType
-                          - order
-                          type: object
-                        RunPlaybookAction:
-                          properties:
-                            actionConfiguration:
-                              properties:
-                                logicAppResourceId:
-                                  type: string
-                                tenantId:
-                                  type: string
-                              required:
-                              - logicAppResourceId
-                              - tenantId
-                              type: object
-                            actionType:
-                              enum:
-                              - Run Playbook
-                              type: string
-                            order:
-                              format: int64
-                              type: integer
-                          required:
-                          - actionConfiguration
-                          - actionType
-                          - order
-                          type: object
-                      type: object
-                    type: array
-                  displayName:
-                    type: string
-                  order:
-                    format: int64
-                    type: integer
-                  triggeringLogic:
-                    properties:
-                      conditions:
-                        items:
-                          oneOf:
-                          - required:
-                            - PropertyArrayChanged
-                          properties:
-                            PropertyArrayChanged:
-                              properties:
-                                conditionProperties:
-                                  properties:
-                                    array_type:
-                                      enum:
-                                      - Alerts
-                                      - Comments
-                                      - Labels
-                                      - Tactics
-                                      type: string
-                                    change_type:
-                                      enum:
-                                      - Added
-                                      type: string
-                                  required:
-                                  - array_type
-                                  - change_type
-                                  type: object
-                                conditionType:
-                                  enum:
-                                  - Property Array Changed
-                                  type: string
-                              required:
-                              - conditionProperties
-                              - conditionType
-                              type: object
-                          type: object
-                        type: array
-                      expiration_time_utc:
-                        type: string
-                      is_enabled:
-                        type: boolean
-                      triggers_on:
-                        enum:
-                        - Incident
-                        - Alerts
-                        type: string
-                      triggers_when:
-                        enum:
-                        - Created
-                        - Updated
-                        type: string
-                    required:
-                    - conditions
-                    - expiration_time_utc
-                    - is_enabled
-                    - triggers_on
-                    - triggers_when
-                    type: object
-                required:
-                - actions
-                - displayName
-                - order
-                - triggeringLogic
-                type: object
-            required:
-            - properties
-            type: object
-          status:
-            nullable: true
-            properties:
-              deployed:
-                type: string
-              enabled:
-                type: string
-              message:
-                type: string
-            required:
-            - deployed
-            - enabled
-            - message
-            type: object
-        required:
-        - spec
-        title: MicrosoftSentinelAutomationRule
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+            status:
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
