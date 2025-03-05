@@ -1,6 +1,6 @@
 {
   "python.REPL.enableREPLSmartSend": false,
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python.defaultInterpreterPath": "${workspaceFolder}/python/.venv/bin/python",
   "[python]": {
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
@@ -15,6 +15,7 @@
   "vs-kubernetes": {
     "vs-kubernetes.crd-code-completion": "disabled"
   },
+  "yaml.schemaStore.enable": false,
   "yaml.schemas": {
     "./rust/generated/jsonschema/MicrosoftSentinelDetectionRule.json": "/**/*/microsoft_sentinel/detection_rules/*.yaml",
     "./rust/generated/jsonschema/MicrosoftSentinelAutomationRuleCRD.json": "/**/*/microsoft_sentinel/automation_rules/*.yaml"
