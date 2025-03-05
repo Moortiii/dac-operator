@@ -12,11 +12,8 @@
   },
   "python.analysis.typeCheckingMode": "basic",
   "typescript.preferences.importModuleSpecifier": "relative",
-  "vs-kubernetes": {
-    "vs-kubernetes.crd-code-completion": "enabled"
-  },
   "yaml.schemas": {
-    "kubernetes://schema/buildrlabs.io/v1@microsoftsentineldetectionrule": "detection_rules/microsoft_sentinel",
-    "kubernetes://schema/buildrlabs.io/v1@microsoftsentinelautomationrule": "automation_rules"
+    "./rust/generated/jsonschema/MicrosoftSentinelDetectionRule.json": "/**/*/microsoft_sentinel/detection_rules/*.yaml",
+    "./rust/generated/jsonschema/MicrosoftSentinelAutomationRuleCRD.json": "/**/*/microsoft_sentinel/automation_rules/*.yaml"
   }
 }
