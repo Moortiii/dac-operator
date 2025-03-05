@@ -1,10 +1,10 @@
-import json
 import os
 from enum import StrEnum
 from typing import Literal
 
 import kopf
 from kubernetes import client
+from loguru import logger
 from pydantic import BaseModel, ValidationError
 
 from dac_operator import providers
@@ -17,14 +17,14 @@ AUTOMATION_RULE_SYNC_INTERVAL = 500
 DETECTION_RULE_SYNC_INTERVAL = 500
 
 ALLOWED_NAMESPACES = [
-    # "a1b2c3d4",
-    # "ce06ce71",
+    "a1b2c3d4",
+    "ce06ce71",
 ]
 
 ALLOWED_RULE_NAMES = [
-    # "example-detection-rule-1",
-    # "example-detection-rule-2",
-    # "example-detection-rule-3",
+    "example-detection-rule-1",
+    "example-detection-rule-2",
+    "example-detection-rule-3",
 ]
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -70,11 +70,12 @@ async def create_automation_rule(spec, **kwargs):
         return status.model_dump()
 
     try:
-        await microsoft_sentinel_service.create_or_update_analytics_rule(
+        await microsoft_sentinel_service.create_or_update_automation_rule(
             rule_name=rule_name,
-            payload=spec["properties"],
+            payload={"properties": spec["properties"]},
         )
-    except Exception:
+    except Exception as err:
+        logger.error(str(err))
         status.message = ErrorMessages.analytics_rule_create_error
         return status.model_dump()
 
@@ -157,7 +158,8 @@ async def create_detection_rule(spec, **kwargs):
             rule_name=rule_name,
             payload=payload,
         )
-    except Exception:
+    except Exception as err:
+        logger.error(str(err))
         status.message = ErrorMessages.analytics_rule_create_error
         return status.model_dump()
 
@@ -191,7 +193,8 @@ async def remove_detection_rule(spec, **kwargs):
 
     try:
         await microsoft_sentinel_service.remove_analytics_rule(rule_name=kwargs["name"])
-    except Exception:
+    except Exception as err:
+        logger.error(str(err))
         status.message = ErrorMessages.initialization_error
         return status.model_dump()
 
