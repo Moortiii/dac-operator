@@ -1,0 +1,680 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MicrosoftSentinelAutomationRuleSpec",
+  "type": "object",
+  "required": [
+    "properties"
+  ],
+  "properties": {
+    "properties": {
+      "$ref": "#/definitions/Properties"
+    }
+  },
+  "definitions": {
+    "Action": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "actionConfiguration",
+            "actionType",
+            "order"
+          ],
+          "properties": {
+            "actionConfiguration": {
+              "$ref": "#/definitions/AddIncidentTaskActionProperties"
+            },
+            "actionType": {
+              "type": "string",
+              "enum": [
+                "AddIncidentTask"
+              ]
+            },
+            "order": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "actionConfiguration",
+            "actionType",
+            "order"
+          ],
+          "properties": {
+            "actionConfiguration": {
+              "$ref": "#/definitions/PlaybookActionProperties"
+            },
+            "actionType": {
+              "type": "string",
+              "enum": [
+                "RunPlaybook"
+              ]
+            },
+            "order": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "actionConfiguration",
+            "actionType",
+            "order"
+          ],
+          "properties": {
+            "actionConfiguration": {
+              "$ref": "#/definitions/IncidentPropertiesActionProperties"
+            },
+            "actionType": {
+              "type": "string",
+              "enum": [
+                "ModifyProperties"
+              ]
+            },
+            "order": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      ]
+    },
+    "AddIncidentTaskActionProperties": {
+      "type": "object",
+      "required": [
+        "description",
+        "title"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "ArrayConditionSupportedArrayType": {
+      "type": "string",
+      "enum": [
+        "CustomDetailValues",
+        "CustomDetails"
+      ]
+    },
+    "BooleanCondition": {
+      "type": "object",
+      "required": [
+        "innerConditions",
+        "operator"
+      ],
+      "properties": {
+        "innerConditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          }
+        },
+        "operator": {
+          "$ref": "#/definitions/BooleanConditionSupportedOperator"
+        }
+      }
+    },
+    "BooleanConditionSupportedOperator": {
+      "type": "string",
+      "enum": [
+        "And",
+        "Or"
+      ]
+    },
+    "Condition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "conditionProperties",
+            "conditionType"
+          ],
+          "properties": {
+            "conditionProperties": {
+              "$ref": "#/definitions/BooleanCondition"
+            },
+            "conditionType": {
+              "type": "string",
+              "enum": [
+                "Boolean"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "conditionProperties",
+            "conditionType"
+          ],
+          "properties": {
+            "conditionProperties": {
+              "$ref": "#/definitions/PropertyArrayChangedCondition"
+            },
+            "conditionType": {
+              "type": "string",
+              "enum": [
+                "PropertyArrayChanged"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "conditionProperties",
+            "conditionType"
+          ],
+          "properties": {
+            "conditionProperties": {
+              "$ref": "#/definitions/PropertyChangedCondition"
+            },
+            "conditionType": {
+              "type": "string",
+              "enum": [
+                "PropertyChanged"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "conditionProperties",
+            "conditionType"
+          ],
+          "properties": {
+            "conditionProperties": {
+              "$ref": "#/definitions/PropertyArrayValuesCondition"
+            },
+            "conditionType": {
+              "type": "string",
+              "enum": [
+                "PropertyArray"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "conditionProperties",
+            "conditionType"
+          ],
+          "properties": {
+            "conditionProperties": {
+              "$ref": "#/definitions/PropertyCondition"
+            },
+            "conditionType": {
+              "type": "string",
+              "enum": [
+                "Property"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "IncidentClassification": {
+      "type": "string",
+      "enum": [
+        "BenignPositive",
+        "FalsePositive",
+        "TruePositive",
+        "Undetermined"
+      ]
+    },
+    "IncidentClassificationReason": {
+      "type": "string",
+      "enum": [
+        "InaccurateData",
+        "IncorrectAlertLogic",
+        "SuspiciousActivity",
+        "SuspiciousButExpected"
+      ]
+    },
+    "IncidentLabel": {
+      "type": "object",
+      "required": [
+        "labelName"
+      ],
+      "properties": {
+        "labelName": {
+          "type": "string"
+        },
+        "labelType": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LabelType"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "IncidentOwnerInfo": {
+      "type": "object",
+      "required": [
+        "assignedTo",
+        "email",
+        "objectId",
+        "ownerType",
+        "userPrincipalName"
+      ],
+      "properties": {
+        "assignedTo": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "objectId": {
+          "type": "string"
+        },
+        "ownerType": {
+          "$ref": "#/definitions/OwnerType"
+        },
+        "userPrincipalName": {
+          "type": "string"
+        }
+      }
+    },
+    "IncidentPropertiesActionProperties": {
+      "type": "object",
+      "properties": {
+        "classification": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncidentClassification"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "classificationComment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "classificationReason": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncidentClassificationReason"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "labels": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/IncidentLabel"
+          }
+        },
+        "owner": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncidentOwnerInfo"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "severity": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncidentSeverity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/IncidentStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "IncidentSeverity": {
+      "type": "string",
+      "enum": [
+        "High",
+        "Medium",
+        "Low",
+        "Informational"
+      ]
+    },
+    "IncidentStatus": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Closed",
+        "New"
+      ]
+    },
+    "LabelType": {
+      "type": "string",
+      "enum": [
+        "AutoAssigned",
+        "User"
+      ]
+    },
+    "OwnerType": {
+      "type": "string",
+      "enum": [
+        "Group",
+        "Unknown",
+        "User"
+      ]
+    },
+    "PlaybookActionProperties": {
+      "type": "object",
+      "required": [
+        "logicAppResourceId",
+        "tenantId"
+      ],
+      "properties": {
+        "logicAppResourceId": {
+          "type": "string"
+        },
+        "tenantId": {
+          "type": "string"
+        }
+      }
+    },
+    "Properties": {
+      "type": "object",
+      "required": [
+        "actions",
+        "displayName",
+        "order",
+        "triggeringLogic"
+      ],
+      "properties": {
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Action"
+          }
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "triggeringLogic": {
+          "$ref": "#/definitions/TriggeringLogic"
+        }
+      }
+    },
+    "PropertyArrayChangedCondition": {
+      "type": "object",
+      "required": [
+        "arrayType",
+        "changeType"
+      ],
+      "properties": {
+        "arrayType": {
+          "$ref": "#/definitions/PropertyArrayChangedConditionSupportedArrayType"
+        },
+        "changeType": {
+          "$ref": "#/definitions/PropertyArrayChangedConditionSupportedChangeType"
+        }
+      }
+    },
+    "PropertyArrayChangedConditionSupportedArrayType": {
+      "type": "string",
+      "enum": [
+        "Alerts",
+        "Comments",
+        "Labels",
+        "Tactics"
+      ]
+    },
+    "PropertyArrayChangedConditionSupportedChangeType": {
+      "type": "string",
+      "enum": [
+        "Added"
+      ]
+    },
+    "PropertyArrayConditionSupportedArrayConditionType": {
+      "type": "string",
+      "enum": [
+        "AnyItem"
+      ]
+    },
+    "PropertyArrayValuesCondition": {
+      "type": "object",
+      "required": [
+        "arrayConditionType",
+        "arrayType",
+        "itemConditions"
+      ],
+      "properties": {
+        "arrayConditionType": {
+          "$ref": "#/definitions/PropertyArrayConditionSupportedArrayConditionType"
+        },
+        "arrayType": {
+          "$ref": "#/definitions/ArrayConditionSupportedArrayType"
+        },
+        "itemConditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          }
+        }
+      }
+    },
+    "PropertyChangedCondition": {
+      "type": "object",
+      "required": [
+        "changeType",
+        "operator",
+        "propertyValues",
+        "properyName"
+      ],
+      "properties": {
+        "changeType": {
+          "$ref": "#/definitions/PropertyChangedConditionSupportedChangedType"
+        },
+        "operator": {
+          "$ref": "#/definitions/PropertyConditionSupportedOperator"
+        },
+        "propertyValues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "properyName": {
+          "$ref": "#/definitions/PropertyChangedConditionSupportedPropertyType"
+        }
+      }
+    },
+    "PropertyChangedConditionSupportedChangedType": {
+      "type": "string",
+      "enum": [
+        "ChangedFrom",
+        "ChangedTo"
+      ]
+    },
+    "PropertyChangedConditionSupportedPropertyType": {
+      "type": "string",
+      "enum": [
+        "IncidentOwner",
+        "IncidentSeverity",
+        "IncidentStatus"
+      ]
+    },
+    "PropertyCondition": {
+      "type": "object",
+      "required": [
+        "operator",
+        "propertyName",
+        "propertyValues"
+      ],
+      "properties": {
+        "operator": {
+          "$ref": "#/definitions/PropertyConditionSupportedOperator"
+        },
+        "propertyName": {
+          "$ref": "#/definitions/PropertyConditionSupportedProperty"
+        },
+        "propertyValues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "PropertyConditionSupportedOperator": {
+      "type": "string",
+      "enum": [
+        "Contains",
+        "EndsWith",
+        "Equals",
+        "NotContains",
+        "NotEndsWith",
+        "NotEquals",
+        "NotStartsWith",
+        "StartsWith"
+      ]
+    },
+    "PropertyConditionSupportedProperty": {
+      "type": "string",
+      "enum": [
+        "AccountAadTenantId",
+        "AccountAadUserId",
+        "AccountNTDomain",
+        "AccountName",
+        "AccountObjectGuid",
+        "AccountPUID",
+        "AccountSid",
+        "AccountUPNSuffix",
+        "AlertAnalyticRuleIds",
+        "AlertProductNames",
+        "AzureResourceResourceId",
+        "AzureResourceSubscriptionId",
+        "CloudApplicationAppId",
+        "CloudApplicationAppName",
+        "DNSDomainName",
+        "FileDirectory",
+        "FileHashValue",
+        "FileName",
+        "HostAzureID",
+        "HostNTDomain",
+        "HostName",
+        "HostNetBiosName",
+        "HostOSVersion",
+        "IPAddress",
+        "IncidentCustomDetailsKey",
+        "IncidentCustomDetailsValue",
+        "IncidentDescription",
+        "IncidentLabel",
+        "IncidentProviderName",
+        "IncidentRelatedAnalyticRuleIds",
+        "IncidentSeverity",
+        "IncidentStatus",
+        "IncidentTactics",
+        "IncidentTitle",
+        "IncidentUpdatedBySource",
+        "IoTDeviceId",
+        "IoTDeviceModel",
+        "IoTDeviceName",
+        "IoTDeviceOperatingSystem",
+        "IoTDeviceType",
+        "IoTDeviceVendor",
+        "MailMessageDeliveryAction",
+        "MailMessageDeliveryLocation",
+        "MailMessageP1Sender",
+        "MailMessageP2Sender",
+        "MailMessageRecipient",
+        "MailMessageSenderIP",
+        "MailMessageSubject",
+        "MailboxDisplayName",
+        "MailboxPrimaryAddress",
+        "MailboxUPN",
+        "MalwareCategory",
+        "MalwareName",
+        "ProcessCommandLine",
+        "ProcessId",
+        "RegistryKey",
+        "RegistryValueData",
+        "Url"
+      ]
+    },
+    "TriggeringLogic": {
+      "type": "object",
+      "required": [
+        "conditions",
+        "expirationTimeUtc",
+        "isEnabled",
+        "triggersOn",
+        "triggersWhen"
+      ],
+      "properties": {
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          }
+        },
+        "expirationTimeUtc": {
+          "type": "string"
+        },
+        "isEnabled": {
+          "type": "boolean"
+        },
+        "triggersOn": {
+          "$ref": "#/definitions/TriggersOn"
+        },
+        "triggersWhen": {
+          "$ref": "#/definitions/TriggersWhen"
+        }
+      }
+    },
+    "TriggersOn": {
+      "type": "string",
+      "enum": [
+        "Incidents",
+        "Alerts"
+      ]
+    },
+    "TriggersWhen": {
+      "type": "string",
+      "enum": [
+        "Created",
+        "Updated"
+      ]
+    }
+  }
+}
