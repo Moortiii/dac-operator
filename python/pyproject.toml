@@ -11,8 +11,9 @@ dependencies = [
     "pydantic-settings>=2.7.1",
     "openapi-pydantic>=0.5.1",
     "pyyaml>=6.0.2",
-    "kopf>=1.37.4",
+    "kopf[dev]>=1.37.4",
     "kubernetes>=32.0.1",
+    "jsonschema>=4.23.0",
 ]
 
 [tool.ruff]
