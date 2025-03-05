@@ -1,3 +1,5 @@
+import json
+import os
 from enum import StrEnum
 from typing import Literal
 
@@ -11,34 +13,81 @@ from dac_operator.microsoft_sentinel import (
     microsoft_sentinel_models,
 )
 
+AUTOMATION_RULE_SYNC_INTERVAL = 500
+DETECTION_RULE_SYNC_INTERVAL = 500
+
 ALLOWED_NAMESPACES = [
-    "a1b2c3d4",
-    "ce06ce71",
+    # "a1b2c3d4",
+    # "ce06ce71",
 ]
 
 ALLOWED_RULE_NAMES = [
-    "example-detection-rule-1",
-    "example-detection-rule-2",
-    "example-detection-rule-3",
+    # "example-detection-rule-1",
+    # "example-detection-rule-2",
+    # "example-detection-rule-3",
 ]
+
+ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 class ErrorMessages(StrEnum):
     initialization_error = "Unable to configure provider, see controller logs."
-    create_error = "Unable to create Detection Rule upstream."
-    delete_error = "Unable to delete Detection Rule upstream."
+    automation_rule_create_error = "Unable to create Automation Rule upstream."
+    analytics_rule_create_error = "Unable to create Analytics Rule upstream."
+    analytics_rule_delete_error = "Unable to delete Analytics Rule upstream."
 
 
-class DetectionRuleStatus(BaseModel):
+class AnalyticsRuleStatus(BaseModel):
     deployed: Literal["Deployed", "Not deployed", "Unknown"] = "Unknown"
     enabled: Literal["Enabled", "Disabled", "Unknown"] = "Unknown"
     rule_type: str = "Unknown"
     message: str = ""
 
 
-@kopf.timer("microsoftsentineldetectionrules", interval=30.0)  # type: ignore
+class AutomationRuleStatus(BaseModel):
+    deployed: Literal["Deployed", "Not deployed", "Unknown"] = "Unknown"
+    enabled: Literal["Enabled", "Disabled", "Unknown"] = "Unknown"
+    message: str = ""
+
+
+@kopf.timer("microsoftsentinelautomationrules", interval=AUTOMATION_RULE_SYNC_INTERVAL)  # type: ignore
+async def create_automation_rule(spec, **kwargs):
+    status = AutomationRuleStatus()
+
+    namespace = kwargs["namespace"]
+    rule_name = kwargs["name"]
+
+    try:
+        microsoft_sentinel_service = providers.get_microsoft_sentinel_service(
+            kubernetes_client=providers.get_kubernetes_client(
+                core_api=client.CoreV1Api(),
+                custom_objects_api=client.CustomObjectsApi(),
+            ),
+            namespace=namespace,
+        )
+    except microsoft_sentinel_exceptions.ServiceConfigurationException:
+        status.message = ErrorMessages.initialization_error.value
+        return status.model_dump()
+
+    try:
+        await microsoft_sentinel_service.create_or_update_analytics_rule(
+            rule_name=rule_name,
+            payload=spec["properties"],
+        )
+    except Exception:
+        status.message = ErrorMessages.analytics_rule_create_error
+        return status.model_dump()
+
+    status.deployed = "Deployed"
+    return status.model_dump()
+
+
+@kopf.timer(
+    "microsoftsentineldetectionrules",
+    interval=DETECTION_RULE_SYNC_INTERVAL,
+)  # type: ignore
 async def create_detection_rule(spec, **kwargs):
-    status = DetectionRuleStatus()
+    status = AnalyticsRuleStatus()
     namespace = kwargs["namespace"]
     rule_name = kwargs["name"]
 
@@ -109,7 +158,7 @@ async def create_detection_rule(spec, **kwargs):
             payload=payload,
         )
     except Exception:
-        status.message = ErrorMessages.create_error
+        status.message = ErrorMessages.analytics_rule_create_error
         return status.model_dump()
 
     analytics_rule_status = await microsoft_sentinel_service.analytics_rule_status(
@@ -126,7 +175,7 @@ async def create_detection_rule(spec, **kwargs):
 
 @kopf.on.delete("microsoftsentineldetectionrules")  # type: ignore
 async def remove_detection_rule(spec, **kwargs):
-    status = DetectionRuleStatus(deployed="Deployed")
+    status = AnalyticsRuleStatus(deployed="Deployed")
 
     try:
         microsoft_sentinel_service = providers.get_microsoft_sentinel_service(
