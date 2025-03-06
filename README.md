@@ -22,6 +22,8 @@
 
 ### TODO:
 
+- [ ] Create Tiltfile (and possibly Helm chart) for running operator components with hot-reloading in-cluster.
+
 - [ ] Autogenerate CRD schemas for resource types that are non-structural as well, e.g. Automation Rules.
 
 - [ ] Store sensitive operator configuration as Kubernetes Secrets, use SOPS-encryption for storing them in Git.
