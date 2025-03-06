@@ -1,6 +1,8 @@
-use kube_derive::CustomResource;
-use schemars::{schema_for, JsonSchema};
+use kube::{CustomResource, CustomResourceExt};
+use schemars::schema_for;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Write;
@@ -353,19 +355,7 @@ struct MicrosoftSentinelAutomationRuleCRD {
     metadata: Metadata,
 }
 
-#[derive(CustomResource, Clone, Debug, Deserialize, Serialize, PartialEq, JsonSchema)]
-#[kube(
-    group = "buildrlabs.io",
-    version = "v1",
-    kind = "MicrosoftSentinelAutomationRule",
-    shortname = "msar",
-    status = "MicrosoftSentinelAutomationRuleStatus",
-    shortname = "msars",
-    printcolumn = r#"{"name":"Status", "type":"string", "description":"Checks if the Automation Rule is deployed to Microsoft Sentinel", "jsonPath":".status.create_automation_rule.deployed"}"#,
-    printcolumn = r#"{"name":"Enabled", "type":"string", "description":"Checks if the Automation Rule is enabled in Microsoft Sentinel", "jsonPath":".status.create_automation_rule.enabled"}"#,
-    printcolumn = r#"{"name":"Message", "type":"string", "description":"Additional information about the deployment status", "jsonPath":".status.create_automation_rule.message"}"#,
-    namespaced
-)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 struct MicrosoftSentinelAutomationRuleSpec {
     properties: Properties,
@@ -378,7 +368,53 @@ struct MicrosoftSentinelAutomationRuleStatus {
     enabled: String,
 }
 
-pub fn write_crd() -> std::io::Result<()> {
+/// Specification for Microsoft Sentinel Automation Rule
+#[derive(CustomResource, Serialize, Deserialize, Clone, Debug, JsonSchema)]
+#[kube(
+    group = "buildrlabs.io",
+    version = "v1",
+    kind = "MicrosoftSentinelAutomationRule",
+    status = "MicrosoftSentinelAutomationRuleStatus",
+    shortname = "msars",
+    shortname = "msar",
+    printcolumn = r#"{"name":"Status", "type":"string", "description":"Checks if the Automation Rule is deployed to Microsoft Sentinel", "jsonPath":".status.create_automation_rule.deployed"}"#,
+    printcolumn = r#"{"name":"Enabled", "type":"string", "description":"Checks if the Automation Rule is enabled in Microsoft Sentinel", "jsonPath":".status.create_automation_rule.enabled"}"#,
+    printcolumn = r#"{"name":"Message", "type":"string", "description":"Additional information about the deployment status", "jsonPath":".status.create_automation_rule.message"}"#,
+    namespaced
+)]
+struct MicrosoftSentinelAutomationRuleCRDSpec {
+    // For a pass-through CRD, we use a dynamic field structure with serde_json::Value
+    #[schemars(schema_with = "preserve_unknown")]
+    #[serde(flatten)]
+    pub additional_fields: BTreeMap<String, serde_json::Value>,
+}
+
+/// Status for Microsoft Sentinel Automation Rule
+#[derive(Serialize, Deserialize, Clone, Debug, JsonSchema)]
+struct MicrosoftSentinelAutomationRuleCRDStatus {
+    #[schemars(schema_with = "preserve_unknown")]
+    #[serde(flatten)]
+    pub additional_fields: BTreeMap<String, serde_json::Value>,
+}
+
+// Helper function to mark a schema as accepting arbitrary properties
+fn preserve_unknown(_: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+    let mut schema = schemars::schema::SchemaObject::default();
+    schema.extensions.insert(
+        "x-kubernetes-preserve-unknown-fields".to_string(),
+        serde_json::Value::Bool(true),
+    );
+    schemars::schema::Schema::Object(schema)
+}
+
+pub fn write_schemas() -> std::io::Result<()> {
+    // Write MicrosoftSentinelAutomationRule passthrough CRD
+    let filename = "MicrosoftSentinelAutomationRule";
+    let crd_yaml = serde_yaml::to_string(&MicrosoftSentinelAutomationRule::crd()).unwrap();
+    let mut file = File::create(format!("./generated/crds/{}.yaml", filename)).unwrap();
+    file.write_all(crd_yaml.as_bytes()).unwrap();
+    println!("{filename} CRD-schema written to {filename}.yaml");
+
     // Write MicrosoftSentinelAutomationRule validation JSON-schema
     let filename = "MicrosoftSentinelAutomationRule";
     let schema = schema_for!(MicrosoftSentinelAutomationRuleSpec);

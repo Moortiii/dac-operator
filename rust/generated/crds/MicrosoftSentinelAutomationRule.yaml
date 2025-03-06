@@ -3,26 +3,58 @@ kind: CustomResourceDefinition
 metadata:
   name: microsoftsentinelautomationrules.buildrlabs.io
 spec:
-  scope: Namespaced
   group: buildrlabs.io
   names:
+    categories: []
     kind: MicrosoftSentinelAutomationRule
     plural: microsoftsentinelautomationrules
-    singular: microsoftsentinelautomationrule
     shortNames:
-      - msars
-      - msar
+    - msars
+    - msar
+    singular: microsoftsentinelautomationrule
+  scope: Namespaced
   versions:
-    - name: v1
-      served: true
-      storage: true
-      schema:
-        openAPIV3Schema:
-          type: object
-          properties:
-            spec:
-              type: object
-              x-kubernetes-preserve-unknown-fields: true
-            status:
-              type: object
-              x-kubernetes-preserve-unknown-fields: true
+  - additionalPrinterColumns:
+    - description: Checks if the Automation Rule is deployed to Microsoft Sentinel
+      jsonPath: .status.create_automation_rule.deployed
+      name: Status
+      type: string
+    - description: Checks if the Automation Rule is enabled in Microsoft Sentinel
+      jsonPath: .status.create_automation_rule.enabled
+      name: Enabled
+      type: string
+    - description: Additional information about the deployment status
+      jsonPath: .status.create_automation_rule.message
+      name: Message
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: Auto-generated derived type for MicrosoftSentinelAutomationRuleCRDSpec via `CustomResource`
+        properties:
+          spec:
+            description: Specification for Microsoft Sentinel Automation Rule
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          status:
+            nullable: true
+            properties:
+              deployed:
+                type: string
+              enabled:
+                type: string
+              message:
+                type: string
+            required:
+            - deployed
+            - enabled
+            - message
+            type: object
+        required:
+        - spec
+        title: MicrosoftSentinelAutomationRule
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

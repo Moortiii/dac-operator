@@ -1,0 +1,45 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: microsoftsentinelworkbooks.buildrlabs.io
+spec:
+  group: buildrlabs.io
+  names:
+    categories: []
+    kind: MicrosoftSentinelWorkbook
+    plural: microsoftsentinelworkbooks
+    shortNames:
+    - msw
+    - msws
+    singular: microsoftsentinelworkbook
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: Additional information about the deployment status
+      jsonPath: .status.create_workbook.message
+      name: Message
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: Auto-generated derived type for MicrosoftSentinelWorkbookCRDSpec via `CustomResource`
+        properties:
+          spec:
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          status:
+            nullable: true
+            properties:
+              message:
+                type: string
+            required:
+            - message
+            type: object
+        required:
+        - spec
+        title: MicrosoftSentinelWorkbook
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
