@@ -17,7 +17,8 @@
   },
   "yaml.schemaStore.enable": false,
   "yaml.schemas": {
-    "./rust/generated/jsonschema/MicrosoftSentinelDetectionRule.json": "/**/*/microsoft_sentinel/detection_rules/*.yaml",
+    "./rust/generated/jsonschema/MicrosoftSentinelMacroCRD.json": "/**/*/microsoft_sentinel/macros/*.yaml",
+    "./rust/generated/jsonschema/MicrosoftSentinelDetectionRuleCRD.json": "/**/*/microsoft_sentinel/detection_rules/*.yaml",
     "./rust/generated/jsonschema/MicrosoftSentinelAutomationRuleCRD.json": "/**/*/microsoft_sentinel/automation_rules/*.yaml"
   }
 }
