@@ -1,4 +1,3 @@
-use kube::core::CustomResourceExt;
 use kube_derive::CustomResource;
 use schemars::{schema_for, JsonSchema};
 use serde::{Deserialize, Serialize};
@@ -380,13 +379,6 @@ struct MicrosoftSentinelAutomationRuleStatus {
 }
 
 pub fn write_crd() -> std::io::Result<()> {
-    // Write MicrosoftSentinelAutomationRule CRD
-    // let filename = "MicrosoftSentinelAutomationRule";
-    // let crd_yaml = serde_yaml::to_string(&MicrosoftSentinelAutomationRule::crd()).unwrap();
-    // let mut file = File::create(format!("./generated/crds/{}.yaml", filename)).unwrap();
-    // file.write_all(crd_yaml.as_bytes()).unwrap();
-    // println!("{filename} CRD-schema written to {filename}.json");
-
     // Write MicrosoftSentinelAutomationRule validation JSON-schema
     let filename = "MicrosoftSentinelAutomationRule";
     let schema = schema_for!(MicrosoftSentinelAutomationRuleSpec);

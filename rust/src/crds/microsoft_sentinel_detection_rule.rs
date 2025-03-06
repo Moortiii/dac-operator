@@ -220,6 +220,35 @@ struct CreateDetectionRuleStatusProperties {
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+enum CRDName {
+    MicrosoftSentinelDetectionRule,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+enum APIVersion {
+    #[serde(rename = "buildrlabs.io/v1")]
+    BuildrLabs,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+struct Metadata {
+    name: String,
+    namespace: Option<String>,
+    #[serde(flatten)]
+    additional_properties: HashMap<String, String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+struct MicrosoftSentinelDetectionRuleCRD {
+    kind: CRDName,
+    spec: MicrosoftSentinelDetectionRuleSpec,
+    api_version: APIVersion,
+    metadata: Metadata,
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 struct MicrosoftSentinelDetectionRuleStatus {
     create_detection_rule: CreateDetectionRuleStatusProperties,
 }
@@ -232,9 +261,9 @@ pub fn write_crd() -> std::io::Result<()> {
     file.write_all(crd_yaml.as_bytes()).unwrap();
     println!("{filename} CRD-schema written to {filename}.yaml");
 
-    // Write MicrosoftSentinelDetectionRule Jsonschema
-    let filename = "MicrosoftSentinelDetectionRule";
-    let schema = schema_for!(MicrosoftSentinelDetectionRuleSpec);
+    // Write MicrosoftSentinelDetectionRuleCRD JSON-schema
+    let filename = "MicrosoftSentinelDetectionRuleCRD";
+    let schema = schema_for!(MicrosoftSentinelDetectionRuleCRD);
     let crd_json = serde_json::to_string_pretty(&schema).unwrap();
     let mut file = File::create(format!("./generated/jsonschema/{}.json", filename)).unwrap();
     file.write_all(crd_json.as_bytes()).unwrap();
