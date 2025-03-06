@@ -195,8 +195,8 @@ struct Properties {
     group = "buildrlabs.io",
     version = "v1",
     kind = "MicrosoftSentinelDetectionRule",
-    shortname = "msd",
     status = "MicrosoftSentinelDetectionRuleStatus",
+    shortname = "msd",
     shortname = "msds",
     printcolumn = r#"{"name":"Status", "type":"string", "description":"Checks if the Detection Rule is deployed to Microsoft Sentinel", "jsonPath":".status.create_detection_rule.deployed"}"#,
     printcolumn = r#"{"name":"Enabled", "type":"string", "description":"Checks if the Detection Rule is enabled in Microsoft Sentinel", "jsonPath":".status.create_detection_rule.enabled"}"#,
@@ -253,7 +253,7 @@ struct MicrosoftSentinelDetectionRuleStatus {
     create_detection_rule: CreateDetectionRuleStatusProperties,
 }
 
-pub fn write_crd() -> std::io::Result<()> {
+pub fn write_schemas() -> std::io::Result<()> {
     // Write MicrosoftSentinelDetectionRule CRD
     let filename = "MicrosoftSentinelDetectionRule";
     let crd_yaml = serde_yaml::to_string(&MicrosoftSentinelDetectionRule::crd()).unwrap();

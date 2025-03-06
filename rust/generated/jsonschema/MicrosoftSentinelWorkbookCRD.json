@@ -1,0 +1,195 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MicrosoftSentinelWorkbookCRD",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "$ref": "#/definitions/APIVersion"
+    },
+    "kind": {
+      "$ref": "#/definitions/CRDName"
+    },
+    "metadata": {
+      "$ref": "#/definitions/Metadata"
+    },
+    "spec": {
+      "$ref": "#/definitions/MicrosoftSentinelWorkbookSpec"
+    }
+  },
+  "definitions": {
+    "APIVersion": {
+      "type": "string",
+      "enum": [
+        "buildrlabs.io/v1"
+      ]
+    },
+    "CRDName": {
+      "type": "string",
+      "enum": [
+        "MicrosoftSentinelWorkbook"
+      ]
+    },
+    "Identity": {
+      "type": "object",
+      "required": [
+        "principalId",
+        "tenantId",
+        "type",
+        "userAssignedIdentities"
+      ],
+      "properties": {
+        "principalId": {
+          "type": "string"
+        },
+        "tenantId": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/ManagedServiceIdentityType"
+        },
+        "userAssignedIdentities": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/UserAssignedIdentity"
+          }
+        }
+      }
+    },
+    "Kind": {
+      "type": "string",
+      "enum": [
+        "shared",
+        "user"
+      ]
+    },
+    "ManagedServiceIdentityType": {
+      "type": "string",
+      "enum": [
+        "SystemAssigned",
+        "SystemAssigned,UserAssigned",
+        "UserAssigned",
+        "None"
+      ]
+    },
+    "Metadata": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "MicrosoftSentinelWorkbookSpec": {
+      "type": "object",
+      "required": [
+        "identity",
+        "kind",
+        "location",
+        "properties",
+        "tags"
+      ],
+      "properties": {
+        "identity": {
+          "$ref": "#/definitions/Identity"
+        },
+        "kind": {
+          "$ref": "#/definitions/Kind"
+        },
+        "location": {
+          "type": "string"
+        },
+        "properties": {
+          "$ref": "#/definitions/WorkbookProperties"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "UserAssignedIdentity": {
+      "type": "object",
+      "required": [
+        "clientId",
+        "principalId"
+      ],
+      "properties": {
+        "clientId": {
+          "type": "string"
+        },
+        "principalId": {
+          "type": "string"
+        }
+      }
+    },
+    "WorkbookProperties": {
+      "type": "object",
+      "required": [
+        "category",
+        "displayName",
+        "serializedData"
+      ],
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "serializedData": {
+          "type": "string"
+        },
+        "sourceId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "storageUri": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

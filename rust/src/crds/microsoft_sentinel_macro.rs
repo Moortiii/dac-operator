@@ -11,8 +11,8 @@ use std::io::Write;
     group = "buildrlabs.io",
     version = "v1",
     kind = "MicrosoftSentinelMacro",
-    shortname = "msmacro",
-    shortname = "msmacros",
+    shortname = "msm",
+    shortname = "msms",
     namespaced
 )]
 #[serde(rename_all = "camelCase")]
@@ -49,7 +49,7 @@ struct MicrosoftSentinelMacroCRD {
     metadata: Metadata,
 }
 
-pub fn write_crd() -> std::io::Result<()> {
+pub fn write_schemas() -> std::io::Result<()> {
     // Write MicrosoftSentinelMacro CRD
     let filename = "MicrosoftSentinelMacro";
     let crd_yaml = serde_yaml::to_string(&MicrosoftSentinelMacro::crd()).unwrap();
