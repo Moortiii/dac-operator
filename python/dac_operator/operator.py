@@ -1,7 +1,9 @@
+import json
 import os
 from enum import StrEnum
 from typing import Literal
 
+import jsonschema
 import kopf
 from kubernetes import client
 from loguru import logger
@@ -28,6 +30,43 @@ ALLOWED_RULE_NAMES = [
 ]
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
+
+# TODO: https://github.com/nolar/kopf/issues/1155
+# Due to the issue described above we are unable to use the validating webhook once we
+# deploy the app in-cluster. As a result, we need to write our own webhook configuration
+# before we can re-enable it
+# @kopf.on.startup()  # type: ignore
+# def configure(settings: kopf.OperatorSettings, **_):
+#     settings.admission.server = kopf.WebhookServer(
+#         addr="0.0.0.0",
+#         port=443,
+#         host="dac-operator",
+#     )
+#     settings.admission.managed = "auto.kopf.dev"
+
+
+# @kopf.on.validate("microsoftsentinelautomationrules", operations=["CREATE", "UPDATE"])  # type: ignore
+# async def validate_automation_rule(spec, warnings, **_):
+#     def get_json_schema():
+#         with open(
+#             f"{ROOT_PATH}/assets/jsonschema/MicrosoftSentinelAutomationRule.json"
+#         ) as f:
+#             schema = json.load(f)
+
+#         return schema
+
+#     try:
+#         jsonschema.validate(
+#             {"properties": spec["properties"]}, schema=get_json_schema()
+#         )
+#     except jsonschema.SchemaError as err:
+#         logger.error(str(err))
+#         raise kopf.AdmissionError("The JSON-schema for Automation Rules is invalid")
+#     except jsonschema.ValidationError as err:
+#         logger.error(str(err))
+#         raise kopf.AdmissionError(
+#             "Automation Rule specification did not pass validation"
+#         )
 
 
 class ErrorMessages(StrEnum):

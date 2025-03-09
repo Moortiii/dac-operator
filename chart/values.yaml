@@ -1,0 +1,4 @@
+operator:
+  name: dac-operator
+
+serviceAccountName: dac-operator

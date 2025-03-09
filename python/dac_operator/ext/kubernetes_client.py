@@ -84,8 +84,9 @@ class KubernetesClient:
                 plural=plural,
                 name=name,
             )
-        except kubernetes.client.exceptions.ApiException:
-            self._logger.error(f"Config map '{name}' does not exist.")
+        except kubernetes.client.exceptions.ApiException as err:
+            self._logger.exception(err)
+            self._logger.error(f"Config map '{name}' does not exist!")
             raise kubernetes_exceptions.ResourceNotFoundException
 
         try:
@@ -93,6 +94,7 @@ class KubernetesClient:
                 result, from_attributes=True
             )
         except ValidationError as err:
+            self._logger.exception(err)
             self._logger.error(
                 f"Unable to convert result for '{group}.{plural}.{version}.{name}' "
                 f"into an object of type {return_type}: {err}"
