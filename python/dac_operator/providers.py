@@ -1,4 +1,5 @@
 import kubernetes.client
+from loguru import logger
 
 from dac_operator.config import get_settings
 from dac_operator.ext import kubernetes_exceptions
@@ -37,7 +38,8 @@ def get_microsoft_sentinel_service(namespace: str, kubernetes_client: Kubernetes
         configmap = kubernetes_client.get_config_map(
             name="microsoft-sentinel-configuration", namespace=namespace
         )
-    except kubernetes_exceptions.ResourceNotFoundException:
+    except kubernetes_exceptions.ResourceNotFoundException as err:
+        logger.exception(err)
         raise microsoft_sentinel_exceptions.ServiceConfigurationException
 
     return microsoft_sentinel_service.MicrosoftSentinelService(

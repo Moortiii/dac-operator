@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.operator.name }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      application: {{ .Values.operator.name }}
+  template:
+    metadata:
+      labels:
+        application: {{ .Values.operator.name }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccountName }}
+      containers:
+      - name: dac-operator
+        protocol: TCP
+        imagePullPolicy: Always
+        image: buildrlabs/dac-operator
+        command: ["kopf", "run", "/operator/dac_operator/operator.py"]
