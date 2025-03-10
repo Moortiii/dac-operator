@@ -11,10 +11,9 @@ dependencies = [
     "pydantic-settings>=2.7.1",
     "openapi-pydantic>=0.5.1",
     "pyyaml>=6.0.2",
-    "kopf[dev]>=1.37.4",
     "kubernetes>=32.0.1",
     "jsonschema>=4.23.0",
-    "oscrypto",
+    "kopf>=1.37.4",
 ]
 
 [tool.ruff]
@@ -35,6 +34,3 @@ dev = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["dac_operator"]
-
-[tool.uv.sources]
-oscrypto = { git = "https://github.com/wbond/oscrypto.git", rev = "1547f535001ba568b239b8797465536759c742a3" }
