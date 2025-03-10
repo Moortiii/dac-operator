@@ -1,5 +1,13 @@
 # dac-operator
 
+This repository contains the code for my Master thesis with the preliminary title:
+
+> A novel approach for Detection Engineering using Kubernetes and GitOps
+
+The general idea is to leverage Kubernetes operator with GitOps tooling in order to achieve seamless Continuous Deployment (CD) of a Detection Library, across multiple Tenants and multiple security products.
+
+The operator uses `etcd` as a database, storing information in Custom Resource Definition objects and continuously synchronizing the content to relevant security products using REST APIs.
+
 ## Highlights:
 
 - Fully automated continuous deployment of Detection Library using FluxCD
