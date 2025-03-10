@@ -26,19 +26,13 @@ The operator uses `etcd` as a database, storing information in Custom Resource D
 
 - Support for Microsoft Sentinel Automation Rules
 
-- Support for Microsoft Workbooks
+- Support for Microsoft Sentinel Workbooks
 
 ### TODO:
 
-- [ ] Create Tiltfile (and possibly Helm chart) for running operator components with hot-reloading in-cluster.
-
-- [ ] Autogenerate CRD schemas for resource types that are non-structural as well, e.g. Automation Rules.
-
 - [ ] Store sensitive operator configuration as Kubernetes Secrets, use SOPS-encryption for storing them in Git.
 
-- [ ] Create converter for Content Hub rules. It should be siple to import existing rules into the Detection library.
-
-- [ ] Add support for [Microsoft Sentinel Workbooks](https://learn.microsoft.com/en-us/azure/sentinel/monitor-your-data).
+- [ ] Create converter for Content Hub rules. It should be simple to import existing rules into the Detection library.
 
 - [ ] Ingest externally sourced Analytic rules from Microsoft Sentinel, such as those installed from ContentHub.
 
