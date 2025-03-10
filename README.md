@@ -30,6 +30,8 @@ The operator uses `etcd` as a database, storing information in Custom Resource D
 
 ### TODO:
 
+- [ ] Create CI pipeline that performs automated testing
+
 - [ ] Store sensitive operator configuration as Kubernetes Secrets, use SOPS-encryption for storing them in Git.
 
 - [ ] Create converter for Content Hub rules. It should be simple to import existing rules into the Detection library.
