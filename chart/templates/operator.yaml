@@ -21,3 +21,23 @@ spec:
         imagePullPolicy: Always
         image: buildrlabs/dac-operator
         command: ["kopf", "run", "/operator/dac_operator/operator.py"]
+        volumeMounts:
+          - readOnly: true
+            mountPath: /certs
+            name: webhook-certs
+      volumes:
+        - name: webhook-certs
+          secret:
+            secretName: admission-webhook-tls
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.operator.name }}
+spec:
+  selector:
+    application: {{ .Values.operator.name }}
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 443
