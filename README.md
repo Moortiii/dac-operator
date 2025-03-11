@@ -32,6 +32,10 @@ The operator uses `etcd` as a database, storing information in Custom Resource D
 
 - [ ] Create CI pipeline that performs automated testing
 
+- [ ] Showcase multi-product support for a single vendor by deploying Detection Rules to Microsoft Defender
+
+- [ ] Showcase multi-vendor support by deploying Detection Rules to Splunk
+
 - [ ] Store sensitive operator configuration as Kubernetes Secrets, use SOPS-encryption for storing them in Git.
 
 - [ ] Create converter for Content Hub rules. It should be simple to import existing rules into the Detection library.
