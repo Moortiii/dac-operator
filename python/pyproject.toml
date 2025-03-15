@@ -14,6 +14,7 @@ dependencies = [
     "kubernetes>=32.0.1",
     "jsonschema>=4.23.0",
     "kopf>=1.37.4",
+    "splunk-sdk>=2.1.0",
 ]
 
 [tool.ruff]
