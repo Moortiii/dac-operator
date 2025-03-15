@@ -1,5 +1,9 @@
+import os
+
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 class Settings(BaseSettings):

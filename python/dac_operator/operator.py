@@ -1,8 +1,13 @@
 import kopf
 
-from dac_operator.handlers import (
-    microsoft_sentinel_timer_handlers,
-    microsoft_sentinel_validation_handlers,
+from dac_operator.handlers.microsoft_sentinel.analytic_rules import (
+    analytic_rule_timers as analytic_rule_timers,
+)
+from dac_operator.handlers.microsoft_sentinel.automation_rules import (
+    automation_rule_timers as automation_rule_timers,
+)
+from dac_operator.handlers.microsoft_sentinel.automation_rules import (
+    automation_rule_validators as automation_rule_validators,
 )
 
 

@@ -198,10 +198,10 @@ struct Properties {
     status = "MicrosoftSentinelDetectionRuleStatus",
     shortname = "msd",
     shortname = "msds",
-    printcolumn = r#"{"name":"Status", "type":"string", "description":"Checks if the Detection Rule is deployed to Microsoft Sentinel", "jsonPath":".status.create_detection_rule.deployed"}"#,
-    printcolumn = r#"{"name":"Enabled", "type":"string", "description":"Checks if the Detection Rule is enabled in Microsoft Sentinel", "jsonPath":".status.create_detection_rule.enabled"}"#,
-    printcolumn = r#"{"name":"Message", "type":"string", "description":"Additional information about the deployment status", "jsonPath":".status.create_detection_rule.message"}"#,
-    printcolumn = r#"{"name":"Rule type", "type":"string", "description":"The type of Microsoft Sentinel Detection Rule", "jsonPath":".status.create_detection_rule.rule_type"}"#,
+    printcolumn = r#"{"name":"Status", "type":"string", "description":"Checks if the Detection Rule is deployed to Microsoft Sentinel", "jsonPath":".status.create_analytic_rule.deployed"}"#,
+    printcolumn = r#"{"name":"Enabled", "type":"string", "description":"Checks if the Detection Rule is enabled in Microsoft Sentinel", "jsonPath":".status.create_analytic_rule.enabled"}"#,
+    printcolumn = r#"{"name":"Message", "type":"string", "description":"Additional information about the deployment status", "jsonPath":".status.create_analytic_rule.message"}"#,
+    printcolumn = r#"{"name":"Rule type", "type":"string", "description":"The type of Microsoft Sentinel Detection Rule", "jsonPath":".status.create_analytic_rule.rule_type"}"#,
     namespaced
 )]
 #[serde(rename_all = "camelCase")]
@@ -250,7 +250,7 @@ struct MicrosoftSentinelDetectionRuleCRD {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 struct MicrosoftSentinelDetectionRuleStatus {
-    create_detection_rule: CreateDetectionRuleStatusProperties,
+    create_analytic_rule: CreateDetectionRuleStatusProperties,
 }
 
 pub fn write_schemas() -> std::io::Result<()> {

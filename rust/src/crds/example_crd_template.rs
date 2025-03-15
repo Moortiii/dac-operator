@@ -21,7 +21,7 @@ struct ExampleStruct {}
     shortname = "msmacro",
     status = "ExampleCrdStatus",
     shortname = "msmacros",
-    printcolumn = r#"{"name":"Message", "type":"string", "description":"Additional information about the deployment status", "jsonPath":".status.create_detection_rule.message"}"#,
+    printcolumn = r#"{"name":"Message", "type":"string", "description":"Additional information about the deployment status", "jsonPath":".status.create_analytic_rule.message"}"#,
     namespaced
 )]
 #[serde(rename_all = "camelCase")]
