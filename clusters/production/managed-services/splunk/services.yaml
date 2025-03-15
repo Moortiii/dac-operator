@@ -1,0 +1,25 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: splunk-web
+  namespace: splunk
+spec:
+  selector:
+    application: splunk
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: splunk-api
+  namespace: splunk
+spec:
+  selector:
+    application: splunk
+  ports:
+    - protocol: TCP
+      port: 8001
+      targetPort: 8001
