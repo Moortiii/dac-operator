@@ -59,7 +59,7 @@ AggregationKind = Literal["AlertPerResult", "SingleAlert"]
 MatchingMethod = Literal["AllEntities", "AnyAlert", "Selected"]
 TriggerOperator = Literal["Equal", "GreaterThan", "LessThan", "NotEqual"]
 AlertSeverity = Literal["High", "Medium", "Low", "Informational"]
-DetectionRuleTypes = Literal[
+AnalyticRuleTypes = Literal[
     "Unknown", "MicrosoftSecurityIncidentCreation", "Fusion", "Scheduled"
 ]
 
@@ -73,7 +73,7 @@ class MacroInjectionResult(BaseModel):
 class AnalyticsRuleStatus(BaseModel):
     enabled: bool
     deployed: bool
-    rule_type: DetectionRuleTypes
+    rule_type: AnalyticRuleTypes
 
 
 class BaseModelWithConfig(BaseModel):

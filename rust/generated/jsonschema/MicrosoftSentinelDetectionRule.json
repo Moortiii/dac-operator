@@ -1,10 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "MicrosoftSentinelDetectionRuleSpec",
+  "title": "MicrosoftSentinelAnalyticRuleSpec",
   "type": "object",
-  "required": [
-    "properties"
-  ],
+  "required": ["properties"],
   "properties": {
     "kind": {
       "default": "Scheduled",
@@ -17,17 +15,11 @@
   "definitions": {
     "AggregationKind": {
       "type": "string",
-      "enum": [
-        "AlertPerResult",
-        "SingleAlert"
-      ]
+      "enum": ["AlertPerResult", "SingleAlert"]
     },
     "AlertDetail": {
       "type": "object",
-      "required": [
-        "displayName",
-        "severity"
-      ],
+      "required": ["displayName", "severity"],
       "properties": {
         "displayName": {
           "type": "string"
@@ -41,28 +33,16 @@
       "type": "object",
       "properties": {
         "alertDescriptionFormat": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": ["string", "null"]
         },
         "alertDisplayNameFormat": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": ["string", "null"]
         },
         "alertSeverityColumnName": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": ["string", "null"]
         },
         "alertTacticsColumnName": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": ["string", "null"]
         }
       }
     },
@@ -90,10 +70,7 @@
     },
     "EntityMapping": {
       "type": "object",
-      "required": [
-        "entityType",
-        "fieldMappings"
-      ],
+      "required": ["entityType", "fieldMappings"],
       "properties": {
         "entityType": {
           "$ref": "#/definitions/EntityType"
@@ -131,9 +108,7 @@
     },
     "EventGroupingSettings": {
       "type": "object",
-      "required": [
-        "aggregationKind"
-      ],
+      "required": ["aggregationKind"],
       "properties": {
         "aggregationKind": {
           "$ref": "#/definitions/AggregationKind"
@@ -142,10 +117,7 @@
     },
     "FieldMapping": {
       "type": "object",
-      "required": [
-        "columnName",
-        "identifier"
-      ],
+      "required": ["columnName", "identifier"],
       "properties": {
         "columnName": {
           "type": "string"
@@ -201,10 +173,7 @@
     },
     "IncidentConfiguration": {
       "type": "object",
-      "required": [
-        "createIncident",
-        "groupingConfiguration"
-      ],
+      "required": ["createIncident", "groupingConfiguration"],
       "properties": {
         "createIncident": {
           "type": "boolean"
@@ -216,11 +185,7 @@
     },
     "MatchingMethod": {
       "type": "string",
-      "enum": [
-        "AllEntities",
-        "AnyAlert",
-        "Selected"
-      ]
+      "enum": ["AllEntities", "AnyAlert", "Selected"]
     },
     "Properties": {
       "type": "object",
@@ -248,23 +213,14 @@
           ]
         },
         "alertRuleTemplateName": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": ["string", "null"]
         },
         "customDetails": {
-          "type": [
-            "object",
-            "null"
-          ],
+          "type": ["object", "null"],
           "additionalProperties": true
         },
         "description": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": ["string", "null"]
         },
         "displayName": {
           "type": "string"
@@ -273,10 +229,7 @@
           "type": "boolean"
         },
         "entityMappings": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "$ref": "#/definitions/EntityMapping"
           }
@@ -320,28 +273,19 @@
           "type": "boolean"
         },
         "tactics": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "$ref": "#/definitions/AttackTactic"
           }
         },
         "techniques": {
-          "type": [
-            "array",
-            "null"
-          ],
+          "type": ["array", "null"],
           "items": {
             "type": "string"
           }
         },
         "templateVersion": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": ["string", "null"]
         },
         "triggerOperator": {
           "$ref": "#/definitions/TriggerOperator"
@@ -354,21 +298,11 @@
     },
     "Severity": {
       "type": "string",
-      "enum": [
-        "High",
-        "Informational",
-        "Low",
-        "Medium"
-      ]
+      "enum": ["High", "Informational", "Low", "Medium"]
     },
     "TriggerOperator": {
       "type": "string",
-      "enum": [
-        "Equal",
-        "GreaterThan",
-        "LessThan",
-        "NotEqual"
-      ]
+      "enum": ["Equal", "GreaterThan", "LessThan", "NotEqual"]
     }
   }
 }

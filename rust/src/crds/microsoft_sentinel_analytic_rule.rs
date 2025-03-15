@@ -194,10 +194,12 @@ struct Properties {
 #[kube(
     group = "buildrlabs.io",
     version = "v1",
-    kind = "MicrosoftSentinelDetectionRule",
-    status = "MicrosoftSentinelDetectionRuleStatus",
-    shortname = "msd",
-    shortname = "msds",
+    kind = "MicrosoftSentinelAnalyticRule",
+    status = "MicrosoftSentinelAnalyticRuleStatus",
+    shortname = "msanalytic",
+    shortname = "msanalytics",
+    shortname = "msanalyticrule",
+    shortname = "msanalyticrules",
     printcolumn = r#"{"name":"Status", "type":"string", "description":"Checks if the Detection Rule is deployed to Microsoft Sentinel", "jsonPath":".status.create_analytic_rule.deployed"}"#,
     printcolumn = r#"{"name":"Enabled", "type":"string", "description":"Checks if the Detection Rule is enabled in Microsoft Sentinel", "jsonPath":".status.create_analytic_rule.enabled"}"#,
     printcolumn = r#"{"name":"Message", "type":"string", "description":"Additional information about the deployment status", "jsonPath":".status.create_analytic_rule.message"}"#,
@@ -205,14 +207,14 @@ struct Properties {
     namespaced
 )]
 #[serde(rename_all = "camelCase")]
-struct MicrosoftSentinelDetectionRuleSpec {
+struct MicrosoftSentinelAnalyticRuleSpec {
     properties: Properties,
     #[serde(default = "scheduled")]
     kind: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-struct CreateDetectionRuleStatusProperties {
+struct CreateAnalyticRuleStatusProperties {
     message: String,
     deployed: String,
     enabled: String,
@@ -221,7 +223,7 @@ struct CreateDetectionRuleStatusProperties {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 enum CRDName {
-    MicrosoftSentinelDetectionRule,
+    MicrosoftSentinelAnalyticRule,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
@@ -241,29 +243,29 @@ struct Metadata {
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
 #[serde(rename_all = "camelCase")]
-struct MicrosoftSentinelDetectionRuleCRD {
+struct MicrosoftSentinelAnalyticRuleCRD {
     kind: CRDName,
-    spec: MicrosoftSentinelDetectionRuleSpec,
+    spec: MicrosoftSentinelAnalyticRuleSpec,
     api_version: APIVersion,
     metadata: Metadata,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone, JsonSchema)]
-struct MicrosoftSentinelDetectionRuleStatus {
-    create_analytic_rule: CreateDetectionRuleStatusProperties,
+struct MicrosoftSentinelAnalyticRuleStatus {
+    create_analytic_rule: CreateAnalyticRuleStatusProperties,
 }
 
 pub fn write_schemas() -> std::io::Result<()> {
-    // Write MicrosoftSentinelDetectionRule CRD
-    let filename = "MicrosoftSentinelDetectionRule";
-    let crd_yaml = serde_yaml::to_string(&MicrosoftSentinelDetectionRule::crd()).unwrap();
+    // Write MicrosoftSentinelAnalyticRule CRD
+    let filename = "MicrosoftSentinelAnalyticRule";
+    let crd_yaml = serde_yaml::to_string(&MicrosoftSentinelAnalyticRule::crd()).unwrap();
     let mut file = File::create(format!("./generated/crds/{}.yaml", filename)).unwrap();
     file.write_all(crd_yaml.as_bytes()).unwrap();
     println!("{filename} CRD-schema written to {filename}.yaml");
 
-    // Write MicrosoftSentinelDetectionRuleCRD JSON-schema
-    let filename = "MicrosoftSentinelDetectionRuleCRD";
-    let schema = schema_for!(MicrosoftSentinelDetectionRuleCRD);
+    // Write MicrosoftSentinelAnalyticRuleCRD JSON-schema
+    let filename = "MicrosoftSentinelAnalyticRuleCRD";
+    let schema = schema_for!(MicrosoftSentinelAnalyticRuleCRD);
     let crd_json = serde_json::to_string_pretty(&schema).unwrap();
     let mut file = File::create(format!("./generated/jsonschema/{}.json", filename)).unwrap();
     file.write_all(crd_json.as_bytes()).unwrap();

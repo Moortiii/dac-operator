@@ -9,8 +9,10 @@ spec:
     kind: MicrosoftSentinelAutomationRule
     plural: microsoftsentinelautomationrules
     shortNames:
-    - msars
-    - msar
+    - msautomation
+    - msautomations
+    - msautomationrule
+    - msautomationrules
     singular: microsoftsentinelautomationrule
   scope: Namespaced
   versions:
