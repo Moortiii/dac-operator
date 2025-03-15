@@ -1,17 +1,19 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: microsoftsentineldetectionrules.buildrlabs.io
+  name: microsoftsentinelanalyticrules.buildrlabs.io
 spec:
   group: buildrlabs.io
   names:
     categories: []
-    kind: MicrosoftSentinelDetectionRule
-    plural: microsoftsentineldetectionrules
+    kind: MicrosoftSentinelAnalyticRule
+    plural: microsoftsentinelanalyticrules
     shortNames:
-    - msd
-    - msds
-    singular: microsoftsentineldetectionrule
+    - msanalytic
+    - msanalytics
+    - msanalyticrule
+    - msanalyticrules
+    singular: microsoftsentinelanalyticrule
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -34,7 +36,7 @@ spec:
     name: v1
     schema:
       openAPIV3Schema:
-        description: Auto-generated derived type for MicrosoftSentinelDetectionRuleSpec via `CustomResource`
+        description: Auto-generated derived type for MicrosoftSentinelAnalyticRuleSpec via `CustomResource`
         properties:
           spec:
             properties:
@@ -299,7 +301,7 @@ spec:
             type: object
         required:
         - spec
-        title: MicrosoftSentinelDetectionRule
+        title: MicrosoftSentinelAnalyticRule
         type: object
     served: true
     storage: true

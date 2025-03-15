@@ -2,6 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../macros
-  - detection_rule_1.yaml
-  - detection_rule_2.yaml
-  - detection_rule_3.yaml
+  - analytic_rule_1.yaml
+  - analytic_rule_2.yaml
+  - analytic_rule_3.yaml

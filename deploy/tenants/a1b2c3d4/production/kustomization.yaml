@@ -7,6 +7,6 @@ patches:
   - target:
       group: buildrlabs.io
       version: v1
-      kind: MicrosoftSentinelDetectionRule
-      name: example-detection-rule-1
-    path: ../../../microsoft_sentinel/detection_rules/common_patches/disable_detection_rule.yaml
+      kind: MicrosoftSentinelAnalyticRule
+      name: example-analytic-rule-1
+    path: ../../../microsoft_sentinel/analytic_rules/common_patches/disable_analytic_rule.yaml

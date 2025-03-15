@@ -1,7 +1,7 @@
 apiVersion: buildrlabs.io/v1
-kind: MicrosoftSentinelDetectionRule
+kind: MicrosoftSentinelAnalyticRule
 metadata:
-  name: example-detection-rule-3
+  name: example-analytic-rule-3
 spec:
   properties:
     displayName: Example Rule 3

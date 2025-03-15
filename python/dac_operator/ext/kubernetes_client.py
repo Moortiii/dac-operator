@@ -64,7 +64,7 @@ class KubernetesClient:
 
             version(str): The API version for the resource, e.g. v1
 
-            plural(str): The name of the CRD, e.g. microsoftsentineldetectionrules
+            plural(str): The name of the CRD, e.g. microsoftsentinelanalyticrules
 
             namespace(str): The namespace the object belongs to
 

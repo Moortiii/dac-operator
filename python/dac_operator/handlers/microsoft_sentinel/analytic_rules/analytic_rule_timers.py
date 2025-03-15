@@ -20,9 +20,9 @@ ALLOWED_NAMESPACES = [
 ]
 
 ALLOWED_RULE_NAMES = [
-    "example-detection-rule-1",
-    "example-detection-rule-2",
-    "example-detection-rule-3",
+    "example-analytic-rule-1",
+    "example-analytic-rule-2",
+    "example-analytic-rule-3",
 ]
 
 
@@ -40,7 +40,7 @@ class AnalyticsRuleStatus(BaseModel):
     message: str = ""
 
 
-@kopf.timer("microsoftsentineldetectionrules", interval=ANALYTIC_RULE_SYNC_INTERVAL)  # type: ignore
+@kopf.timer("microsoftsentinelanalyticrules", interval=ANALYTIC_RULE_SYNC_INTERVAL)  # type: ignore
 async def create_analytic_rule(spec, **kwargs):
     status = AnalyticsRuleStatus()
     namespace = kwargs["namespace"]
@@ -129,7 +129,7 @@ async def create_analytic_rule(spec, **kwargs):
     return status.model_dump()
 
 
-@kopf.on.delete("microsoftsentineldetectionrules")  # type: ignore
+@kopf.on.delete("microsoftsentinelanalyticrules")  # type: ignore
 async def remove_analytic_rule(spec, **kwargs):
     status = AnalyticsRuleStatus(deployed="Deployed")
 
