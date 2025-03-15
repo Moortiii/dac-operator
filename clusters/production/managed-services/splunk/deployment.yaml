@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: splunk-enterprise
+  namespace: splunk
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      application: splunk
+  template:
+    metadata:
+      labels:
+        application: splunk
+    spec:
+      containers:
+      - name: splunk-enterprise
+        imagePullPolicy: Always
+        image: splunk/splunk:latest
+        env:
+          - name: SPLUNK_START_ARGS
+            value: --accept-license
+          # NOTE: In a real-world scenario, it's unlikely that you're running Splunk Enterprise as
+          # a Docker container like this.
+          # It is very poor practice to have secrets in plaintext in manifests and this is a temporary
+          # workaround. Use a proper secrets management solution instead of hard-coded values.
+          - name: SPLUNK_PASSWORD
+            value: ThisIsAPassword
