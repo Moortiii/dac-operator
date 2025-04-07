@@ -1,0 +1,7 @@
+apiVersion: buildrlabs.io/v1
+kind: MicrosoftSentinelMacro
+metadata:
+  name: example-macro-2
+spec:
+  content: |
+    | extend ColumnAddedByMacro = "This is a new and improved macro"
