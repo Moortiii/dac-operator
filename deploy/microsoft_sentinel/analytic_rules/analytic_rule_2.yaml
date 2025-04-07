@@ -13,7 +13,7 @@ spec:
       AzureActivity
       | where OperationNameValue =~ "MICROSOFT.COMPUTE/VIRTUALMACHINES/START/ACTION"
       | where ActivityStatusValue == "Success"
-      `${example-macro-1}`
+      `${example-macro-2}`
       | extend ResourceName = tostring(parse_json(Properties).resource)
       | summarize Total = dcount(ResourceName), ResourceNames = make_set(ResourceName) by bin(TimeGenerated, TimeFrame), SubscriptionId, ResourceId
       | where Total >= Threshold
