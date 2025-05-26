@@ -8,3 +8,4 @@ data:
   azure_workspace_name: ce06ce71
   azure_workspace_id: ce06ce71
   azure_resource_group_id: ce06ce71
+  secret_ref: azure-ce06ce71

@@ -8,3 +8,4 @@ data:
   azure_workspace_name: a1b2c3d4
   azure_workspace_id: a1b2c3d4
   azure_resource_group_id: a1b2c3d4
+  secret_ref: azure-a1b2c3d4
