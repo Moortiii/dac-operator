@@ -32,7 +32,7 @@ class MicrosoftSentinelRepository:
                 f"https://login.microsoftonline.com/{self._tenant_id}/oauth2/v2.0/token",
                 data={
                     "client_id": self._client_id,
-                    "client_secret": self._client_secret.get_secret_value(),
+                    "client_secret": self._client_secret,
                     "grant_type": "client_credentials",
                     "scope": "https://management.azure.com/.default",
                 },

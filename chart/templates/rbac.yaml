@@ -34,6 +34,10 @@ rules:
   - apiGroups: [""]
     resources: [configmaps]
     verbs: [list, watch, get]
+  
+  - apiGroups: [""]
+    resources: [secrets]
+    verbs: [list, watch, get]
 
   # Framework: admission webhook configuration management.
   - apiGroups: [admissionregistration.k8s.io]

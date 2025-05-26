@@ -28,6 +28,17 @@ class KubernetesClient:
         self._core_api = core_api
         self._logger = logger
 
+    def get_secret(self, name: str, namespace: str) -> dict:
+        try:
+            secret = self._core_api.read_namespaced_secret(name=name, namespace=namespace)
+        except kubernetes.client.exceptions.ApiException:
+            self._logger.error(
+                f"Secret '{name}' does not exist in namespace '{namespace}'."
+            )
+            raise kubernetes_exceptions.ResourceNotFoundException
+        
+        return secret.data
+
     def get_config_map(self, name: str, namespace: str) -> kubernetes_models.ConfigMap:
         try:
             configmap = self._core_api.read_namespaced_config_map(

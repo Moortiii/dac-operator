@@ -40,12 +40,12 @@ The operator uses `etcd` as a database, storing information in Custom Resource D
 1. Create a cluster using `kind create cluster`
 2. Follow the guide in [BOOTSTRAP.md](./docs/BOOTSTRAP.md) to bootstrap FluxCD
 3. Create an App Registration in Microsoft
-4. Create a `.env` file in `./python` with the following variables set:
+4. Create the necessary secrets given in `secret_ref` in `./deploy/tenants/<customer_id>/<environment>/configmap.yaml`
 
     ```
-    AZURE_CLIENT_ID=<value> # Fetch from App Registration Overview
-    AZURE_CLIENT_SECRET<value> # Create using "Secrets and Certificates" on the App Registration
+    kubectl create secret generic azure-<tenant-id> --from-literal=azure_client_id=<client-id>--from-literal=azure_client_secret=<client-secret> -n <tenant-id>
     ```
+
 5. Run the application using `tilt up`
 
 ### TODO:
@@ -55,8 +55,6 @@ The operator uses `etcd` as a database, storing information in Custom Resource D
 - [ ] Showcase multi-product support for a single vendor by deploying Detection Rules to Microsoft Defender
 
 - [ ] Showcase multi-vendor support by deploying Detection Rules to Splunk
-
-- [ ] Store sensitive operator configuration as Kubernetes Secrets, use SOPS-encryption for storing them in Git.
 
 - [ ] Create converter for Content Hub rules. It should be simple to import existing rules into the Detection library.
 
