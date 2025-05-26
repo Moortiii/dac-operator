@@ -1,12 +1,12 @@
-# dac-operator
+# Detection as Code operator
 
-This repository contains the code for my Master thesis with the preliminary title:
+This repository contains the code for my Master thesis with the title:
 
-> A novel approach for Detection Engineering using Kubernetes and GitOps
+> A novel approach for Detection Engineering using Kubernetes and GitOps principles
 
-The general idea is to leverage Kubernetes operator with GitOps tooling in order to achieve seamless Continuous Deployment (CD) of a Detection Library, across multiple Tenants and multiple security products.
+The general idea is to leverage Kubernetes operator with GitOps tooling in order to achieve seamless Continuous Deployment (CD) of a Detection Library, across multiple Tenants, environments and security products.
 
-The operator uses `etcd` as a database, storing information in Custom Resource Definition objects and continuously synchronizing the content to relevant security products using REST APIs.
+The operator uses `etcd` as a database, storing information in Custom Resource Definition objects and continuously synchronizing the content to relevant security products using relevant REST APIs or other means of programmatic interaction.
 
 ## Highlights:
 
@@ -27,6 +27,26 @@ The operator uses `etcd` as a database, storing information in Custom Resource D
 - Support for Microsoft Sentinel Automation Rules
 
 - Support for Microsoft Sentinel Workbooks
+
+## Prerequisites
+
+* [Kind](https://kind.sigs.k8s.io/)
+* [Flux](https://fluxcd.io/)
+* [Rust](https://www.rust-lang.org/)
+* [Tilt](https://tilt.dev)
+
+## Getting started
+
+1. Create a cluster using `kind create cluster`
+2. Follow the guide in [BOOTSTRAP.md](./docs/BOOTSTRAP.md) to bootstrap FluxCD
+3. Create an App Registration in Microsoft
+4. Create a `.env` file in `./python` with the following variables set:
+
+    ```
+    AZURE_CLIENT_ID=<value> # Fetch from App Registration Overview
+    AZURE_CLIENT_SECRET<value> # Create using "Secrets and Certificates" on the App Registration
+    ```
+5. Run the application using `tilt up`
 
 ### TODO:
 

@@ -53,8 +53,8 @@ webhooks:
       - v1beta1
     clientConfig:
       service:
-        name: { { .Values.operator.name } }
-        namespace: { { .Release.Namespace } }
+        name: {{ .Values.operator.name }}
+        namespace: {{ .Release.Namespace }}
         path: /validate-automation-rule
         port: 443
     failurePolicy: Fail
@@ -95,8 +95,8 @@ webhooks:
     clientConfig:
       caBundle: LS0t...LS0K # Provide your CA bundle here
       service:
-        name: { { .Values.operator.name } }
-        namespace: { { .Release.Namespace } }
+        name: {{ .Values.operator.name }}
+        namespace: {{ .Release.Namespace }}
         path: /validate-automation-rule
         port: 443
     failurePolicy: Fail
