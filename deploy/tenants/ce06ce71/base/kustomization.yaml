@@ -1,6 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ../../../microsoft_sentinel/analytic_rules/
+  - ../../../microsoft_sentinel/analytic_rules/macros
+  - ../../../microsoft_sentinel/analytic_rules/production_rules
   - ../../../microsoft_sentinel/automation_rules/
   - namespace.yaml
