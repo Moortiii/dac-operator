@@ -18,8 +18,8 @@ def get_microsoft_sentinel_repository(
 ):
     return microsoft_sentinel_repository.MicrosoftSentinelRepository(
         tenant_id=tenant_id,
-        client_id=settings.client_id,
-        client_secret=settings.client_secret,
+        client_id=settings.azure_client_id,
+        client_secret=settings.azure_client_secret,
         subscription_id=subscription_id,
         resource_group_id=resource_group_id,
         workspace_id=workspace_id,
@@ -48,8 +48,8 @@ def get_microsoft_sentinel_service(namespace: str, kubernetes_client: Kubernetes
             workspace_id=configmap.data["azure_workspace_id"],
             subscription_id=configmap.data["azure_subscription_id"],
             resource_group_id=configmap.data["azure_resource_group_id"],
-            client_id=settings.client_id,
-            client_secret=settings.client_secret,
+            client_id=settings.azure_client_id,
+            client_secret=settings.azure_client_secret,
         ),
         kubernetes_client=kubernetes_client,
         namespace=namespace,

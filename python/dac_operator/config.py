@@ -9,8 +9,8 @@ ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
-    client_id: str
-    client_secret: SecretStr
+    azure_client_id: str
+    azure_client_secret: SecretStr
 
 
 def get_settings() -> Settings:
