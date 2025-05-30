@@ -43,7 +43,13 @@ The operator uses `etcd` as a database, storing information in Custom Resource D
 4. Create the necessary secrets given in `secret_ref` in `./deploy/tenants/<customer_id>/<environment>/configmap.yaml`
 
     ```
-    kubectl create secret generic azure-<tenant-id> --from-literal=azure_client_id=<client-id>--from-literal=azure_client_secret=<client-secret> -n <tenant-id>
+    # Microsoft Sentinel
+    kubectl create secret generic azure-<tenant-id> --from-literal=azure_client_id=<client-id> --from-literal=azure_client_secret=<client-secret> -n <tenant-id>
+    ```
+
+    ```
+    # Splunk
+    kubectl create secret generic splunk-<tenant-id> --from-literal=token=<token> -n <tenant-id>
     ```
 
 5. Run the application using `tilt up`
