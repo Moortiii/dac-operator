@@ -15,7 +15,7 @@ kind: ConfigMap
 metadata:
   name: splunk-configuration
 data:
-  host: splunk.splunk
+  host: splunk-web-api.splunk
   port: "8089"
   scheme: "https"
   verify: "false"
