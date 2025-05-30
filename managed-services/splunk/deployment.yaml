@@ -19,12 +19,28 @@ spec:
       - name: splunk-enterprise
         imagePullPolicy: Always
         image: splunk/splunk:latest
+        securityContext:
+          runAsUser: 0
         env:
           - name: SPLUNK_START_ARGS
-            value: --accept-license
+            value: "--accept-license"
           # NOTE: In a real-world scenario, it's unlikely that you're running Splunk Enterprise as
           # a Docker container like this.
           # It is very poor practice to have secrets in plaintext in manifests and this is a temporary
           # workaround. Use a proper secrets management solution instead of hard-coded values.
           - name: SPLUNK_PASSWORD
-            value: ThisIsAPassword
+            value: helloworld
+          - name: SPLUNK_USER
+            value: root
+          - name: SPLUNK_GROUP
+            value: root
+        volumeMounts:
+            - name: splunk-license-data
+              mountPath: /opt/splunk/var
+            - name: splunk-license-config
+              mountPath: /opt/splunk/etc
+      volumes:
+      - name: splunk-license-config
+        emptyDir: {}
+      - name: splunk-license-data
+        emptyDir: {}
