@@ -17,8 +17,9 @@
   },
   "yaml.schemaStore.enable": false,
   "yaml.schemas": {
-    "./rust/generated/jsonschema/MicrosoftSentinelMacroCRD.json": "/**/*/microsoft_sentinel/macros/*.yaml",
-    "./rust/generated/jsonschema/MicrosoftSentinelAnalyticRuleCRD.json": "/**/*/microsoft_sentinel/analytic_rules/*.yaml",
-    "./rust/generated/jsonschema/MicrosoftSentinelAutomationRuleCRD.json": "/**/*/microsoft_sentinel/automation_rules/*.yaml"
+    "./rust/generated/jsonschema/MicrosoftSentinelMacroCRD.json": "/**/*/microsoft_sentinel/macros/*/**.yaml",
+    "./rust/generated/jsonschema/MicrosoftSentinelAnalyticRuleCRD.json": "/**/*/microsoft_sentinel/analytic_rules/*/**.yaml",
+    "./rust/generated/jsonschema/MicrosoftSentinelAutomationRuleCRD.json": "/**/*/microsoft_sentinel/automation_rules/*/**.yaml",
+    "./rust/generated/jsonschema/SplunkDetectionRuleCRD.json": "/**/*/splunk/detection_rules/*/**.yaml"
   }
 }
