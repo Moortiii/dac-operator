@@ -23,3 +23,16 @@ spec:
     - protocol: TCP
       port: 8001
       targetPort: 8001
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: splunk-web-api
+  namespace: splunk
+spec:
+  selector:
+    application: splunk
+  ports:
+    - protocol: TCP
+      port: 8089
+      targetPort: 8089
