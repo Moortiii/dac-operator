@@ -9,3 +9,15 @@ data:
   azure_workspace_id: a1b2c3d4
   azure_resource_group_id: a1b2c3d4
   secret_ref: azure-a1b2c3d4
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: splunk-configuration
+data:
+  host: splunk-enterprise
+  port: "8089"
+  scheme: "https"
+  verify: "false"
+  app: "-"
+  secret_ref: azure-a1b2c3d4
