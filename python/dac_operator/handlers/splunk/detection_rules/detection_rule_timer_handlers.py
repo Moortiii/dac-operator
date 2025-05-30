@@ -4,7 +4,7 @@ from kubernetes import client as kubernetes_client
 from dac_operator import providers
 from dac_operator.splunk.splunk_models import SplunkDetectionRule
 
-DETECTION_RULE_SYNC_INTERVAL = 5
+DETECTION_RULE_SYNC_INTERVAL = 500
 
 
 @kopf.on.timer("splunkdetectionrules", interval=DETECTION_RULE_SYNC_INTERVAL)  # type: ignore
