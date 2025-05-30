@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SplunkDetectionRuleCRD",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "$ref": "#/definitions/APIVersion"
+    },
+    "kind": {
+      "$ref": "#/definitions/CRDName"
+    },
+    "metadata": {
+      "$ref": "#/definitions/Metadata"
+    },
+    "spec": {
+      "$ref": "#/definitions/SplunkDetectionRuleSpec"
+    }
+  },
+  "definitions": {
+    "APIVersion": {
+      "type": "string",
+      "enum": [
+        "buildrlabs.io/v1"
+      ]
+    },
+    "CRDName": {
+      "type": "string",
+      "enum": [
+        "SplunkDetectionRule"
+      ]
+    },
+    "Metadata": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "SplunkDetectionRuleSpec": {
+      "type": "object",
+      "required": [
+        "description",
+        "name",
+        "search"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "search": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
