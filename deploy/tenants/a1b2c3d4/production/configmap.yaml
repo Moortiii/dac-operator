@@ -20,4 +20,4 @@ data:
   scheme: "https"
   verify: "false"
   app: "-"
-  secret_ref: azure-a1b2c3d4
+  secret_ref: splunk-a1b2c3d4
