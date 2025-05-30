@@ -13,7 +13,7 @@ class MicrosoftSentinelRepository:
         subscription_id: str,
         resource_group_id: str,
         workspace_id: str,
-        client_secret: SecretStr,
+        client_secret: str,
         http_client=httpx.AsyncClient(timeout=30),
         logger=default_loguru_logger,
     ):
