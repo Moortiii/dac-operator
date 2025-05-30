@@ -5,4 +5,5 @@ resources:
   - ../../../microsoft_sentinel/analytic_rules/production_rules
   - ../../../microsoft_sentinel/analytic_rules/experimental_rules
   - ../../../microsoft_sentinel/automation_rules/
+  - ../../../splunk/detection_rules/production_rules/
   - namespace.yaml

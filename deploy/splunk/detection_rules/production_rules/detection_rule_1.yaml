@@ -1,0 +1,8 @@
+apiVersion: buildrlabs.io/v1
+kind: SplunkDetectionRule
+metadata:
+  name: example-detection-rule-1
+spec:
+  description: This is the description
+  name: Detection Rule 1
+  search: index=devtutorial | top limit=20 REPLACEMENT_COST
